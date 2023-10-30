@@ -12,7 +12,7 @@ def read_path(path):
 
 # 文件读取pandas
 def read_file(path):
-    file = pd.read_csv(path)
+    file = pd.read_excel(path)
     return file
 
 
