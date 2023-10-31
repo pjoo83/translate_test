@@ -1,7 +1,7 @@
 from base.testing import TestingCase
 from base.base import Base
 import time
-from base.check_tools import move_file
+from base.check_tools import change_filename
 from page.page_element import Test_language
 import unittest
 
@@ -35,19 +35,19 @@ class TeslFlowDownload(TestingCase):
         # 统一下载安卓和IOS
         self.getDriver.open_page(url=el.download_android)
         time.sleep(10)
-        move_file("android")
+        change_filename("android")
         self.getDriver.open_page(url=el.download_ios)
         time.sleep(10)
-        move_file("ios")
+        change_filename("ios")
 
         # self.getDriver.open_page(url=el.download_unity)
         # time.sleep(4)
         # move_file("unity")
 
 
-if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    case = TeslFlowDownload("test_case_download")
-    suit.addTest(case)
-    runner = unittest.TextTestRunner()
-    runner.run(suit)
+# if __name__ == '__main__':
+#     suit = unittest.TestSuite()
+#     case = TeslFlowDownload("test_case_download")
+#     suit.addTest(case)
+#     runner = unittest.TextTestRunner()
+#     runner.run(suit)

@@ -35,18 +35,18 @@ def find_dos():
     return a
 
 
-if __name__ == '__main__':
-    # 获取全部文件
-    # f = find_file("./txt")
-    # print(f)
-
-    # # 获取包含指定字符的文件
-    f = find_file("../data/test_data", include_str="en")
-    #
-    # # 获取不包含指定字符的文件
-    # f = find_file(r"data", filter_strs=["en", ".txt", ".ogg", "__init__"])
-    # print(f)
-    #
-    # # 获取包含指定字符且不包含某些指定字符的文件
-    # f = find_file(r"docs/Songs", include_str=" ", filter_strs=[".meta", "__init__"])
-    # print(f)
+# if __name__ == '__main__':
+#     # 获取全部文件
+#     # f = find_file("./txt")
+#     # print(f)
+#
+#     # # 获取包含指定字符的文件
+#     f = find_file("../data/test_data", include_str="en")
+#     #
+#     # # 获取不包含指定字符的文件
+#     # f = find_file(r"data", filter_strs=["en", ".txt", ".ogg", "__init__"])
+#     # print(f)
+#     #
+#     # # 获取包含指定字符且不包含某些指定字符的文件
+#     # f = find_file(r"docs/Songs", include_str=" ", filter_strs=[".meta", "__init__"])
+#     # print(f)
