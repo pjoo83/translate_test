@@ -6,7 +6,6 @@ from deepdiff import DeepDiff
 import re
 import shutil
 import os
-from time import sleep
 import openpyxl
 from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
@@ -165,7 +164,7 @@ def get_head(file):
 # 文件名修改
 def change_filename(client):
     Dpath = os.path.expanduser(r'~\Downloads')
-    print(Dpath)
+    # print(Dpath)
     import time
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
     new_name = f"D:/project/translate/data/{client}_data/{times}language_{client}.xlsx"
