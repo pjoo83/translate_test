@@ -19,7 +19,13 @@ class Feishu_data:
         self.upload_url = 'https://open.feishu.cn/open-apis/drive/v1/files/upload_all'
 
         # 文件夹固定token
-        self.translate_token= "Af0XfcOGYlhq8zdaQoecB9FBn8c"
-        # 获取总文件夹清单
-        self.files_list_url = "https://open.feishu.cn/open-apis/drive/v1/files?direction=DESC&folder_token" \
-                              "=Af0XfcOGYlhq8zdaQoecB9FBn8c&order_by=EditedTime"
+        self.translate_token = "Af0XfcOGYlhq8zdaQoecB9FBn8c"
+        # 获取总文件夹清单=========文件夹清单token需要手动获取
+        self.year_filelist_url = "https://open.feishu.cn/open-apis/drive/v1/files?direction=DESC&folder_token" \
+                                 "=Af0XfcOGYlhq8zdaQoecB9FBn8c&order_by=EditedTime"
+
+        self.month_filelist_url = "https://open.feishu.cn/open-apis/drive/v1/files?direction=DESC&folder_token" \
+                                  "=EHQvfnHFOl0yJhdcYHUcZAKDnhA&order_by=EditedTime"
+
+        # 创建文件夹
+        self.create_folder_url = 'https://open.feishu.cn/open-apis/drive/v1/files/create_folder'
