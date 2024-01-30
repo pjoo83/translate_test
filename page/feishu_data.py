@@ -15,7 +15,11 @@ class Feishu_data:
             "Content-Type": "application/json;charset=utf-8",
             'Authorization': ""
         }
-        self.req_files_url = "https://open.feishu.cn/open-apis/drive/v1/files?direction=DESC&order_by=EditedTime"
-
         # 文件上传
         self.upload_url = 'https://open.feishu.cn/open-apis/drive/v1/files/upload_all'
+
+        # 文件夹固定token
+        self.translate_token= "Af0XfcOGYlhq8zdaQoecB9FBn8c"
+        # 获取总文件夹清单
+        self.files_list_url = "https://open.feishu.cn/open-apis/drive/v1/files?direction=DESC&folder_token" \
+                              "=Af0XfcOGYlhq8zdaQoecB9FBn8c&order_by=EditedTime"
