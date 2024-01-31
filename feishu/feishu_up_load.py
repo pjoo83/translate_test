@@ -6,17 +6,17 @@ from feishu_get_token import get_tenant_access_token
 fei = Feishu_data()
 
 
-def upload_file():
-    file_path = '../result/2024年01月05日 17点-22分-37秒--android--language_test.xlsx'
+def upload_file(path, name, parent_node):
+    file_path = path
     file_size = os.path.getsize(file_path)
     url = fei.upload_url
-    form = {'file_name': '2024年01月05日 17点-22分-37秒--android--language_test.xlsx',
+    form = {'file_name': f'{name}',
             'parent_type': 'explorer',
-            'parent_node': 'TAqnf2ZshlHTPudf10vcuDX2nFh',
+            'parent_node': parent_node,
             'size': file_size,
             }
     files = [
-        ('file', ('event_info(1).xlsx', open(f'{file_path}', 'rb'), 'application/json'))
+        ('file', ('上传文件.xlsx', open(f'{file_path}', 'rb'), 'application/json'))
     ]
     token = 'Bearer ' + f"{get_tenant_access_token()}"
     headers = {'Authorization': token}
@@ -26,7 +26,3 @@ def upload_file():
         print("文件已经上传", response.json())
     else:
         print("文件上传失败", response.json())
-
-
-if __name__ == '__main__':
-    upload_file()
