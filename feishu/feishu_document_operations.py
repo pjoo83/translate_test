@@ -1,9 +1,10 @@
 import json
-
+from base.read_all_files import find_file
 from feishu_get_token import get_tenant_access_token
 import requests
 from page.feishu_data import Feishu_data
 from datetime import datetime
+from feishu_upload import upload_file
 
 fei = Feishu_data()
 
@@ -55,24 +56,43 @@ def create_folder(token, name):
         print(f"创建失败------{response.json()}")
 
 
+def get_file_dic():
+    file_list = find_file('../result', 'xlsx')[:-3:-1]
+    files_dic = {}
+    for i in file_list:
+        name = i.split('/')[-1]
+        files_dic.update({name: i})
+    return files_dic
+
+
 def determine_existence():
     """
     :return: 判断年月文件是否存在
     """
-    year_dic = file_dic(fei.year_filelist_url)
-    month_dic = file_dic(fei.month_filelist_url)
-    print(month_dic)
+    year_token = file_dic(fei.year_filelist_url)
+    month_token = file_dic(fei.month_filelist_url)
     # year = f"{datetime.now().year}年"
-    year = '1994年'
     month = f"{datetime.now().month}月"
-    if year in year_dic and month in month_dic:
+    year = '1994年'
+    file_dict = get_file_dic()
+    if year in year_token and month in month_token:
         print("文件夹已存在，不需要创建，请直接上传多语言文件")
-    elif year in year_dic and month not in month_dic:
-        print(year_dic[year])
-        create_folder(year_dic[year], month)
+        for k, v in file_dict.items():
+            print(k, v)
+            upload_file(path=v, name=k, parent_node=month_token[month])
+    elif year in year_token and month not in month_token:
+        month_token = create_folder(year_token[year], month).split("/")[-1]
+        print(f"文件夹{month}已完成创建，将进行文件上传")
+        for k, v in file_dict.items():
+            upload_file(path=v, name=k, parent_node=month_token)
     else:
-        token = create_folder(fei.translate_token, year).split("/")[-1]
-        create_folder(token, month)
+        year_token = create_folder(fei.translate_token, year).split("/")[-1]
+        print(f"文件夹{year}已完成创建，将创建{month}文件夹")
+        month_token = create_folder(year_token, month).split("/")[-1]
+        print(f"文件夹{month}已完成创建，将进行文件上传")
+        for k, v in file_dict.items():
+            upload_file(path=v, name=k, parent_node=month_token)
 
 
-determine_existence()
+if __name__ == '__main__':
+    determine_existence()

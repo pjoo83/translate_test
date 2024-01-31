@@ -10,11 +10,12 @@ def upload_file(path, name, parent_node):
     file_path = path
     file_size = os.path.getsize(file_path)
     url = fei.upload_url
-    form = {'file_name': f'{name}',
-            'parent_type': 'explorer',
-            'parent_node': parent_node,
-            'size': file_size,
-            }
+    form = {
+        'file_name': f'{name}',
+        'parent_type': 'explorer',
+        'parent_node': parent_node,
+        'size': file_size,
+    }
     files = [
         ('file', ('上传文件.xlsx', open(f'{file_path}', 'rb'), 'application/json'))
     ]
