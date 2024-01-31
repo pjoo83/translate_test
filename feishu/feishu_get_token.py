@@ -40,7 +40,3 @@ def get_user_access_token():
     response = requests.post(url=fei.user_access_token, headers=headers, data=payload)
     body = response.text
 
-
-# get_user_access_token()
-
-
