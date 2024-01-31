@@ -29,4 +29,3 @@ class Feishu_data:
 
         # 创建文件夹
         self.create_folder_url = 'https://open.feishu.cn/open-apis/drive/v1/files/create_folder'
-        self.noooo = '2222'
