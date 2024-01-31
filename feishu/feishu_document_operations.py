@@ -57,6 +57,9 @@ def create_folder(token, name):
 
 
 def get_file_dic():
+    """
+    :return: 将文件与绝对路径拼接成字典
+    """
     file_list = find_file('../result', 'xlsx')[:-3:-1]
     files_dic = {}
     for i in file_list:
@@ -71,9 +74,8 @@ def determine_existence():
     """
     year_token = file_dic(fei.year_filelist_url)
     month_token = file_dic(fei.month_filelist_url)
-    # year = f"{datetime.now().year}年"
+    year = f"{datetime.now().year}年"
     month = f"{datetime.now().month}月"
-    year = '1994年'
     file_dict = get_file_dic()
     if year in year_token and month in month_token:
         print("文件夹已存在，不需要创建，请直接上传多语言文件")
