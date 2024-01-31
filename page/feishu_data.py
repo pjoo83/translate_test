@@ -29,3 +29,9 @@ class Feishu_data:
 
         # 创建文件夹
         self.create_folder_url = 'https://open.feishu.cn/open-apis/drive/v1/files/create_folder'
+
+        # 获取机器人所在的群id
+        self.get_chats_id_url = 'https://open.feishu.cn/open-apis/im/v1/chats'
+
+        # 发送信息接口
+        self.send_msg_url = 'https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=chat_id'

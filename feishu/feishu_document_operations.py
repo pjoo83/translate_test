@@ -1,10 +1,10 @@
-import json
 from base.read_all_files import find_file
 from feishu_get_token import get_tenant_access_token
-import requests
 from page.feishu_data import Feishu_data
 from datetime import datetime
 from feishu_upload import upload_file
+import requests
+import json
 
 fei = Feishu_data()
 
@@ -76,13 +76,13 @@ def create_folder_upload():
     year_token = file_dic(fei.year_filelist_url)
     month_token = file_dic(fei.month_filelist_url)
     year = f"{datetime.now().year}年"
-    year = '2025年'
+    # year = '2025年'
     month = f"{datetime.now().month}月"
     file_dict = get_file_dic()
     if year in year_token and month in month_token:
         print("文件夹已存在，不需要创建，将直接上传多语言文件")
         for k, v in file_dict.items():
-            print(k, v)
+            # print(k, v)
             upload_file(path=v, name=k, parent_node=month_token[month])
     elif year in year_token and month not in month_token:
         month_token = create_folder(year_token[year], month)
