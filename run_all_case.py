@@ -1,8 +1,9 @@
 # coding=utf-8
 import time
 import unittest
-
+from feishu.feishu_document_operations import check_folder
 from unittest import defaultTestLoader
+
 # 测试用例存放路径
 case_path = 'case'
 
@@ -23,3 +24,4 @@ if __name__ == '__main__':
     # 运行测试用例
     runner = unittest.TextTestRunner()
     runner.run(get_allcase())
+    check_folder()
