@@ -65,7 +65,8 @@ def get_file_dic():
     file_list = find_file('../result', 'xlsx')[:-3:-1]
     files_dic = {}
     for i in file_list:
-        name = i.split('/')[-1]
+        # 注意区分电脑版本，mac用/,win用\\
+        name = i.split('\\')[-1]
         files_dic.update({name: i})
     return files_dic
 

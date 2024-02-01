@@ -60,9 +60,13 @@ def check_tools(channel):
         # datas_key = different_key()
         rol = different_row_number()
         rol = [i + 2 for i in rol]
+        print(max1, max2, max1 - max2)
         msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
+        # print(msg)
         datas1 = different_data(language1)
+        # print(datas1)
         datas2 = add_change_diff(language1)
+        # print(datas2, 'data2...............')
         datas = [datas1, datas2[0]]
         # logger.info(f"第{rol}增加key{datas_key}")
         if len(datas2[0]) > 0:
@@ -77,6 +81,7 @@ def different_key():
     old_file = language2.iloc[:, 0].tolist()
     new_file = language1.iloc[:, 0].tolist()
     diff = DeepDiff(old_file, new_file)
+    # print(diff, 222222222222222222222)
     return diff
 
 
@@ -143,8 +148,10 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     sheet.append(msg)
     head = get_head(file)
     sheet.append(head)
+    time.sleep(2)
     for file in file_list:
         for i in file:
+            print(i)
             sheet.append(i)
         if msg2:
             sheet.append(msg2)
@@ -228,4 +235,4 @@ def color_fill(sheet, row, column):
     sheet.cell(row, column).fill = fill
 
 
-start_check('server')
+start_check('android')

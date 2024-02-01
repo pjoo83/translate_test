@@ -34,7 +34,7 @@ def send_msg(chat_id, translate_url):
     data = json.dumps({
         "receive_id": f"{chat_id}",
         "msg_type": "text",
-        "content": "{\"text\":" +"\" " +f"{translate_url}" + "\"}",
+        "content": "{\"text\":" + "\" " + f"{translate_url}" + "\"}",
     })
     response = requests.post(url=send_url, headers=headers, data=data)
     print(response.json())
