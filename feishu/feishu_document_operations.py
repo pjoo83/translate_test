@@ -5,6 +5,7 @@ from datetime import datetime
 from feishu_upload import upload_file
 import requests
 import json
+from feishu_send_message import start_send
 
 fei = Feishu_data()
 
@@ -100,7 +101,8 @@ def upload_all(parent_node):
     file_dict = get_file_dic()
     for k, v in file_dict.items():
         token = upload_file(path=v, name=k, parent_node=parent_node)
-        print(token)
+        token = upload_file_url(token)
+        start_send(token)
 
 
 def upload_file_url(token):
@@ -110,6 +112,7 @@ def upload_file_url(token):
     """
     file_url = fei.file_url + f"{token}"
     return file_url
+
 
 if __name__ == '__main__':
     check_folder()
