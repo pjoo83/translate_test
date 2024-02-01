@@ -35,3 +35,6 @@ class Feishu_data:
 
         # 发送信息接口
         self.send_msg_url = 'https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=chat_id'
+
+        # 上传后的文件通用链接
+        self.file_url = 'https://rg975ojk5z.feishu.cn/file/'

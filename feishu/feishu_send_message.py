@@ -29,5 +29,6 @@ def send_msg():
     })
     response = requests.post(url=send_url, headers=headers, data=data)
     print(response.json())
+    return response.json()['data']['file_token']
 
 # send_msg()

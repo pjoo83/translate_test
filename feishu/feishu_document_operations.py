@@ -43,10 +43,11 @@ def create_folder(token, name):
     """
     :return: 创建文件夹
     """
-    payload = json.dumps({
-        "folder_token": f"{token}",
-        "name": f"{name}"
-    })
+    payload = json.dumps(
+        {
+            "folder_token": f"{token}",
+            "name": f"{name}"
+        })
     fei.content_type1["Authorization"] = f'Bearer {get_tenant_access_token()}'
     headers = fei.content_type1
     response = requests.post(url=fei.create_folder_url, headers=headers, data=payload)
@@ -59,7 +60,7 @@ def create_folder(token, name):
 
 def get_file_dic():
     """
-    :return: 将文件与绝对路径拼接成字典
+    :return: 将文件与绝对路径组成字典
     """
     file_list = find_file('../result', 'xlsx')[:-3:-1]
     files_dic = {}
@@ -82,8 +83,8 @@ def create_folder_upload():
     if year in year_token and month in month_token:
         print("文件夹已存在，不需要创建，将直接上传多语言文件")
         for k, v in file_dict.items():
-            # print(k, v)
-            upload_file(path=v, name=k, parent_node=month_token[month])
+            token = upload_file(path=v, name=k, parent_node=month_token[month])
+            print(token)
     elif year in year_token and month not in month_token:
         month_token = create_folder(year_token[year], month)
         print(f"文件夹{month}已完成创建，将进行文件上传")
@@ -98,5 +99,13 @@ def create_folder_upload():
             upload_file(path=v, name=k, parent_node=month_token)
 
 
-if __name__ == '__main__':
-    create_folder_upload()
+def upload_file_url(token):
+    """
+    :param token: 上传文件获取的token
+    :return: 返回拼接后url
+    """
+    file_url = fei.file_url + f"{token}"
+    return file_url
+
+# if __name__ == '__main__':
+#     create_folder_upload()

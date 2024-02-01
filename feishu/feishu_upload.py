@@ -10,6 +10,7 @@ def upload_file(path, name, parent_node):
     file_path = path
     file_size = os.path.getsize(file_path)
     url = fei.upload_url
+    upload_list_token = []
     form = {
         'file_name': f'{name}',
         'parent_type': 'explorer',
@@ -25,5 +26,7 @@ def upload_file(path, name, parent_node):
     response = requests.post(url=url, headers=headers, data=form, files=files)
     if response.json()['code'] == 0:
         print("文件已经上传", response.json())
+        token = response.json()['data']['file_token']
+        return token
     else:
         print("文件上传失败", response.json())
