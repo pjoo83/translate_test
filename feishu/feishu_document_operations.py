@@ -22,7 +22,6 @@ def get_files(filelist_url):
         print(f"获取文件列表错误错误信息如下{files.json()}", )
     else:
         print("获取文件夹列表成功")
-
     return files.json()
 
 
@@ -70,33 +69,38 @@ def get_file_dic():
     return files_dic
 
 
-def create_folder_upload():
+def check_folder():
     """
-    :return: 创建文件夹，并调用上传
+    :return: 判断是否存在，不存在则调用创建
     """
-    year_token = file_dic(fei.year_filelist_url)
-    month_token = file_dic(fei.month_filelist_url)
+    year_list = file_dic(fei.year_filelist_url)
+    month_list = file_dic(fei.month_filelist_url)
     year = f"{datetime.now().year}年"
-    # year = '2025年'
     month = f"{datetime.now().month}月"
-    file_dict = get_file_dic()
-    if year in year_token and month in month_token:
+    if year in year_list and month in month_list:
         print("文件夹已存在，不需要创建，将直接上传多语言文件")
-        for k, v in file_dict.items():
-            token = upload_file(path=v, name=k, parent_node=month_token[month])
-            print(token)
-    elif year in year_token and month not in month_token:
-        month_token = create_folder(year_token[year], month)
+        upload_all(parent_node=month_list[month])
+    elif year in year_list and month not in month_list:
+        month_token = create_folder(year_list[year], month)
         print(f"文件夹{month}已完成创建，将进行文件上传")
-        for k, v in file_dict.items():
-            upload_file(path=v, name=k, parent_node=month_token)
+        upload_all(parent_node=month_token)
     else:
         year_token = create_folder(fei.translate_token, year)
         print(f"文件夹{year}已完成创建，将创建{month}文件夹")
         month_token = create_folder(year_token, month)
         print(f"文件夹{month}已完成创建，将进行文件上传")
-        for k, v in file_dict.items():
-            upload_file(path=v, name=k, parent_node=month_token)
+        upload_all(parent_node=month_token)
+
+
+def upload_all(parent_node):
+    """
+    :param parent_node:文件上传的指定文件夹token
+    :return:
+    """
+    file_dict = get_file_dic()
+    for k, v in file_dict.items():
+        token = upload_file(path=v, name=k, parent_node=parent_node)
+        print(token)
 
 
 def upload_file_url(token):
@@ -107,5 +111,5 @@ def upload_file_url(token):
     file_url = fei.file_url + f"{token}"
     return file_url
 
-# if __name__ == '__main__':
-#     create_folder_upload()
+if __name__ == '__main__':
+    check_folder()
