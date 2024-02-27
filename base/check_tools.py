@@ -23,6 +23,10 @@ def start_check(channel):
 
 # 检测
 def check_tools(channel):
+    """
+    :param channel: 选择对应端
+    :return: 返回差异内容
+    """
     max1 = rows(language1)
     max2 = rows(language2)
     if max1 == max2:
@@ -72,16 +76,20 @@ def check_tools(channel):
         generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
 
 
-# 获取差异key 与行数
 def different_key():
+    """
+    :return: 获取差异key 与行数
+    """
     old_file = language2.iloc[:, 0].tolist()
     new_file = language1.iloc[:, 0].tolist()
     diff = DeepDiff(old_file, new_file)
     return diff
 
 
-# 列数相同时，对比所有差异数据
 def different_msg():
+    """
+    :return: 没有新增时，对比所有差异数据
+    """
     diff_msg = []
     diff = []
     old_file = language2.values.tolist()
@@ -96,6 +104,10 @@ def different_msg():
 
 # 既有变化也有修改
 def add_change_diff(language):
+    """
+    :param language: 传入语言列表
+    :return: 返回变化内容与变化
+    """
     diff_msg = []
     diff = []
     diff_num = different_row_number()
@@ -112,8 +124,10 @@ def add_change_diff(language):
     return diff_msg, diff
 
 
-# 获取差异行
 def different_row_number():
+    """
+    :return: 返回差异行
+    """
     key_rol = []
     dif_keys = different_key().keys()
     for key in dif_keys:
@@ -125,8 +139,11 @@ def different_row_number():
     return key_rol
 
 
-# 获取每行差异数据
 def different_data(file_name):
+    """
+    :param file_name: 传入文件名
+    :return:  获取每行差异数据
+    """
     data_list = []
     dif_num = different_row_number()
     for data_num in dif_num:
@@ -134,8 +151,16 @@ def different_data(file_name):
     return data_list
 
 
-# 写入表格文件
 def generate_xlsx(file, file_list, msg, msg2, channel, datas):
+    """
+    :param file:文件名
+    :param file_list:
+    :param msg: 写入新增值
+    :param msg2:写入变换值
+    :param channel:创建文件名的端名
+    :param datas:变化的内容
+    :return: 写入表格文件
+    """
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
     new_name = f"D:/project/translate/result/{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
@@ -156,14 +181,20 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     workbook.save(new_name)
 
 
-# 获取表头
 def get_head(file):
+    """
+    :param file: 传入下载文件
+    :return: 返回文件表头
+    """
     head = file.keys().tolist()
     return head
 
 
-# 文件名修改
 def change_filename(client):
+    """
+    :param client: 传入对应端名称
+    :return: 文件名修改，并移动到指定文件夹
+    """
     Dpath = os.path.expanduser(r'~\Downloads')
     # print(Dpath)
     import time
@@ -183,23 +214,30 @@ def change_filename(client):
 #     sleep(3)
 
 
-# 插入编辑列
+#
 def insert_edit_cols(sheet):
+    """
+    :param sheet: 传入文件名
+    :return: 插入编辑列
+    """
     sheet.insert_cols(idx=1, amount=2)
     sheet["A2"] = "完成备注"
     sheet['B2'] = "编号"
 
 
-# 插入变化值
 def get_line_value(values, sheet):
+    """
+    :param values: 传入变化的内容变化内容
+    :param sheet: 传入文件表
+    :return: 向表格插入变化值
+    """
     max1 = rows(language1)
     max2 = rows(language2)
     line = max1 - max2 + 4
     for i in range(len(values)):
-
         for k, v in values[i].items():
             for k1, v1 in v.items():
-                line1 = change_int(k1) + 3
+                line1 = letters_to_num(k1) + 3
                 color_fill(sheet, line, line1)
                 comment = Comment(str(v1), "hhhh")
                 letters = number_to_letter(line1)
@@ -210,22 +248,35 @@ def get_line_value(values, sheet):
 
 
 # 转化数字
-def change_int(a):
+def letters_to_num(letter):
+    """
+    :param letter: 表格字母
+    :return:返回对应的数字
+    """
     result = ""
-    for char in a:
+    for char in letter:
         if char.isdigit():
             result += char
     return int(result)
 
 
 def number_to_letter(number):
+    """
+    :param number: 传入对应行的数
+    :return: 数字转化为字母
+    """
     if 1 <= number <= 26:
         return string.ascii_uppercase[number - 1]
     elif number > 26:
         return "A" + string.ascii_uppercase[number - 26 - 1]
 
 
-# 颜色填充
 def color_fill(sheet, row, column):
+    """
+    :param sheet: 传入的对应表格地址
+    :param row: 对应的行
+    :param column:
+    :return:
+    """
     fill = PatternFill('solid', fgColor='f8c600')
     sheet.cell(row, column).fill = fill
