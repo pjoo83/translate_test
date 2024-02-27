@@ -12,6 +12,10 @@ from openpyxl.comments import Comment
 
 
 def start_check(channel):
+    """
+    :param channel:传入对应的端
+    :return:
+    """
     global language1, language2
     files = find_file(f"D:/project/translate/data/{channel}_data", include_str="language",
                       filter_strs=["~"])
