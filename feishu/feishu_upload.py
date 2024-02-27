@@ -10,7 +10,7 @@ def upload_file(path, name, parent_node):
     """
     :param path: 文件本地地址
     :param name: 文件完整用户名
-    :param parent_node: 上传指定文件夹的toekn
+    :param parent_node: 上传指定文件夹的token
     :return: 返回文件上传信息
     """
     file_path = path

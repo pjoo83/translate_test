@@ -1,5 +1,5 @@
 import xlrd
-import pandas as pd
+import pandas as pds
 
 
 # 文件读取
@@ -12,7 +12,7 @@ def read_path(path):
 
 # 文件读取pandas
 def read_file(path):
-    file = pd.read_excel(path)
+    file = pds.read_excel(path)
     return file
 
 

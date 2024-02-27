@@ -66,7 +66,7 @@ def get_file_dic():
     files_dic = {}
     for i in file_list:
         # 注意区分电脑版本，mac用/,win用\\
-        name = i.split('\\')[-1]
+        name = i.split('/')[-1]
         files_dic.update({name: i})
     return files_dic
 
@@ -115,5 +115,9 @@ def upload_file_url(token):
     return file_url
 
 
-if __name__ == '__main__':
+def start_tools():
     check_folder()
+
+
+if __name__ == '__main__':
+    start_tools()
