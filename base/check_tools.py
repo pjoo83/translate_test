@@ -213,10 +213,11 @@ def language_dic():
     lan_dic = {"ar": "ar：阿拉伯语", 'en': "en：英语🇬🇧", 'bn': "bn-IN：孟加拉语-印度🇧🇩", 'bn-IN': "bn-IN：孟加拉语-印度🇧🇩",
                'cs': "cs：捷克语🇨🇿", 'de': "de：德语🇩🇪", 'es': "se：西班牙语🇪🇸", 'fr': "fr：法语🇫🇷", 'id': "id：印尼语🇮🇩",
                'in': "in：印尼语🇮🇩", "it": "it：意大利语🇮🇹", 'ja': "ja：日语🇯🇵", 'ko': "ko：韩语🇰🇷", 'ms': "ms：马来语🇲🇾",
-               'pt-rBR': "pt-BR：葡萄牙语🇵🇹", 'pt-BR': "pt-BR：葡萄牙语🇵🇹", 'ru': "ru-RU：俄语🇷🇺（老）",
-               'ru-rRU': "ru-RU：俄语🇷🇺", 'sr': "sr：塞尔维亚语🇷🇸", 'th': "th：泰语🇹🇭", "tr": "tr：土耳其语🇹🇷（老）",
-               'tr-rTR': "tr-rTR：土耳其语🇹🇷（新）", 'tr-TR': "土耳其语🇹🇷", 'ur-PK': "ur-rPK：ur-PK：乌尔都语🇵🇰",
-               'vi': 'vi：越南语🇻🇳', 'zh-rCN': "zh-rCN：中文🇨🇳", "zh-CN": "zh-CN：中文🇨🇳", 'zh-rTW': "zh-rTW：繁体中文🇨🇳",
+               'pt-rBR': "pt-BR：葡萄牙语🇵🇹", 'pt-BR': "pt-BR：葡萄牙语🇵🇹", 'ru': "ru：俄语🇷🇺（老）",
+               'ru-rRU': "ru-rRU：俄语🇷🇺", "ru-RU": "ru-rRU：俄语🇷🇺", 'sr': "sr：塞尔维亚语🇷🇸", 'th': "th：泰语🇹🇭",
+               "tr": "tr：土耳其语🇹🇷（老）", 'tr-rTR': "tr-rTR：土耳其语🇹🇷（新）", 'tr-TR': "tr-TR：土耳其语🇹🇷",
+               'ur-PK': "ur-rPK：ur-PK：乌尔都语🇵🇰", "ur-rPK": "ur-rPK：乌尔都语🇵🇰", 'vi': 'vi：越南语🇻🇳',
+               'zh-rCN': "zh-rCN：中文🇨🇳", "zh-CN": "zh-CN：中文🇨🇳", 'zh-rTW': "zh-rTW：繁体中文🇨🇳",
                "zh-Hant": "zh-Hant:繁体中文🇨🇳"}
     return lan_dic
 
