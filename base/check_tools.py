@@ -174,7 +174,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     sheet.append(head)
     for file in file_list:
         for i in file:
-            print(i)
+            # print(i)
             sheet.append(i)
         if msg2:
             sheet.append(msg2)
