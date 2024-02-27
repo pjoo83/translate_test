@@ -47,7 +47,8 @@ def check_tools(channel):
             # logger.info("本次内容未新增key,下面进行内容检查")
             dif_msg = different_msg()
             if len(dif_msg[0]) > 0:
-                msg = [f"本次检测共有{len(dif_msg[0])}条的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+                msg = [
+                    f"本次检测共有{len(dif_msg[0])}条的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
                 msg2 = []
                 data = ""
                 generate_xlsx(file=language1, file_list=dif_msg[0], msg=msg, channel=channel, msg2=msg2, datas=data)
@@ -74,7 +75,8 @@ def check_tools(channel):
         datas = [datas1, datas2[0]]
         # logger.info(f"第{rol}增加key{datas_key}")
         if len(datas2[0]) > 0:
-            msg2 = [f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+            msg2 = [
+                f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
         else:
             msg2 = [f"本次只有新增，没有修改多语言"]
         generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
@@ -170,7 +172,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     sheet.append(msg)
-    head = get_head(file)
+    head = change_head(file)
     sheet.append(head)
     for file in file_list:
         for i in file:
@@ -192,6 +194,31 @@ def get_head(file):
     """
     head = file.keys().tolist()
     return head
+
+
+def change_head(file):
+    """
+    :param file:传入文件
+    :return: 返回修改后的表头
+    """
+    head_list = get_head(file)
+    lan_dic = language_dic()
+    for i in range(len(head_list)):
+        if head_list[i] in lan_dic:
+            head_list[i] = lan_dic[head_list[i]]
+    return head_list
+
+
+def language_dic():
+    lan_dic = {"ar": "ar：阿拉伯语", 'en': "en：英语🇬🇧", 'bn': "bn-IN：孟加拉语-印度🇧🇩", 'bn-IN': "bn-IN：孟加拉语-印度🇧🇩",
+               'cs': "cs：捷克语🇨🇿", 'de': "de：德语🇩🇪", 'es': "se：西班牙语🇪🇸", 'fr': "fr：法语🇫🇷", 'id': "id：印尼语🇮🇩",
+               'in': "in：印尼语🇮🇩", "it": "it：意大利语🇮🇹", 'ja': "ja：日语🇯🇵", 'ko': "ko：韩语🇰🇷", 'ms': "ms：马来语🇲🇾",
+               'pt-rBR': "pt-BR：葡萄牙语🇵🇹", 'pt-BR': "pt-BR：葡萄牙语🇵🇹", 'ru': "ru-RU：俄语🇷🇺（老）",
+               'ru-rRU': "ru-RU：俄语🇷🇺", 'sr': "sr：塞尔维亚语🇷🇸", 'th': "th：泰语🇹🇭", "tr": "tr：土耳其语🇹🇷（老）",
+               'tr-rTR': "tr-rTR：土耳其语🇹🇷（新）", 'tr-TR': "土耳其语🇹🇷", 'ur-PK': "ur-rPK：ur-PK：乌尔都语🇵🇰",
+               'vi': 'vi：越南语🇻🇳', 'zh-rCN': "zh-rCN：中文🇨🇳", "zh-CN": "zh-CN：中文🇨🇳", 'zh-rTW': "zh-rTW：繁体中文🇨🇳",
+               "zh-Hant": "zh-Hant:繁体中文🇨🇳"}
+    return lan_dic
 
 
 def change_filename(client):
