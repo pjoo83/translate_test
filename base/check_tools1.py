@@ -60,7 +60,6 @@ def check_tools(channel):
         # datas_key = different_key()
         rol = different_row_number()
         rol = [i + 2 for i in rol]
-        print(max1, max2, max1 - max2)
         msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
         # print(msg)
         datas1 = different_data(language1)
@@ -151,7 +150,6 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     time.sleep(2)
     for file in file_list:
         for i in file:
-            print(i)
             sheet.append(i)
         if msg2:
             sheet.append(msg2)
