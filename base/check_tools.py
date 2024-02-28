@@ -9,6 +9,7 @@ import os
 import openpyxl
 from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
+from database_tools import execute_sql
 
 
 def start_check(channel):
@@ -52,6 +53,8 @@ def check_tools(channel):
                 msg2 = []
                 data = ""
                 generate_xlsx(file=language1, file_list=dif_msg[0], msg=msg, channel=channel, msg2=msg2, datas=data)
+                execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                            modify_quantity=len(dif_msg[0]), quantity=max1)
             else:
                 # logger.info(f"本次未修改KEY，也未对值进行修改")
                 print(f"本次未修改KEY，也未对值进行修改")
@@ -65,6 +68,7 @@ def check_tools(channel):
         msg2 = []
         data = ""
         generate_xlsx(file=language2, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
+
     elif max1 > max2:
         # datas_key = different_key()
         rol = different_row_number()
@@ -80,6 +84,18 @@ def check_tools(channel):
         else:
             msg2 = [f"本次只有新增，没有修改多语言"]
         generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
+        execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                    modify_quantity=len(datas2[0]), quantity=max1)
+
+
+def channel_num(channel):
+    """
+    :param channel: 端名称
+    :return: 返回对应的id
+    """
+    channel_dict = {"android": 1, "ios": 2, 'server': 3, 'unity': 4}
+    channel_number = channel_dict[channel]
+    return channel_number
 
 
 def different_key():
@@ -210,7 +226,8 @@ def change_head(file):
 
 
 def language_dic():
-    lan_dic = {"ar": "ar：阿拉伯语🇸🇦", 'en': "en：英语🇬🇧", 'bn': "bn-IN：孟加拉语-印度🇧🇩", 'bn-IN': "bn-IN：孟加拉语-印度🇧🇩",
+    lan_dic = {"ar": "ar：阿拉伯语🇸🇦", 'en': "en：英语🇬🇧", 'bn': "bn-IN：孟加拉语-印度🇧🇩",
+               'bn-IN': "bn-IN：孟加拉语-印度🇧🇩",
                'cs': "cs：捷克语🇨🇿", 'de': "de：德语🇩🇪", 'es': "se：西班牙语🇪🇸", 'fr': "fr：法语🇫🇷", 'id': "id：印尼语🇮🇩",
                'in': "in：印尼语🇮🇩", "it": "it：意大利语🇮🇹", 'ja': "ja：日语🇯🇵", 'ko': "ko：韩语🇰🇷", 'ms': "ms：马来语🇲🇾",
                'pt-rBR': "pt-BR：葡萄牙语🇵🇹", 'pt-BR': "pt-BR：葡萄牙语🇵🇹", 'ru': "ru：俄语🇷🇺（老）",

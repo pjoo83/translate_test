@@ -10,14 +10,17 @@ from time import sleep
 import openpyxl
 from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
+from database_tools import execute_sql
 
 
 def start_check(channel):
     global language1, language2
     files = find_file(f"../data/{channel}_data", include_str="language", filter_strs=["~"])
-    fil = files[:-3:-1]
-    language1 = read_file(fil[0])
-    language2 = read_file(fil[1])
+    # mac排序与win相反
+    # fil = files[:-3:-1]
+    fil = files[::2]
+    language1 = read_file(fil[0]).sort_values(by="key_name")
+    language2 = read_file(fil[1]).sort_values(by="key_name")
     check_tools(channel)
 
 
@@ -39,7 +42,8 @@ def check_tools(channel):
             # logger.info("本次内容未新增key,下面进行内容检查")
             dif_msg = different_msg()
             if len(dif_msg[0]) > 0:
-                msg = [f"本次检测共有{len(dif_msg[0])}条的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+                msg = [
+                    f"本次检测共有{len(dif_msg[0])}条的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
                 msg2 = []
                 data = ""
                 generate_xlsx(file=language1, file_list=dif_msg[0], msg=msg, channel=channel, msg2=msg2, datas=data)
@@ -69,13 +73,19 @@ def check_tools(channel):
         datas = [datas1, datas2[0]]
         # logger.info(f"第{rol}增加key{datas_key}")
         if len(datas2[0]) > 0:
-            msg2 = [f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+
+            msg2 = [
+                f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+
         else:
             msg2 = [f"本次只有新增，没有修改多语言"]
         generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
+        execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                    modify_quantity=len(datas2[0]), quantity=max1)
+
+        # 获取差异key 与行数
 
 
-# 获取差异key 与行数
 def different_key():
     old_file = language2.iloc[:, 0].tolist()
     new_file = language1.iloc[:, 0].tolist()
@@ -96,6 +106,16 @@ def different_msg():
             a = DeepDiff(old_file[i], new_file[i])
             diff.append(a)
     return diff_msg, diff
+
+
+def channel_num(channel):
+    """
+    :param channel: 端名称
+    :return: 返回对应的id
+    """
+    channel_dict = {"android": 1, "ios": 2, 'server': 3, 'unity': 4}
+    channel_number = channel_dict[channel]
+    return channel_number
 
 
 # 既有变化也有修改
@@ -259,4 +279,4 @@ def color_fill(sheet, row, column):
     sheet.cell(row, column).fill = fill
 
 
-start_check('ios')
+start_check('android')
