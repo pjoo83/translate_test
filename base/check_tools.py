@@ -1,5 +1,8 @@
 import time
 import string
+
+from openpyxl.utils import get_column_letter
+
 from base.read_all_files import find_file
 from base.trans_reading import read_file, rows
 from deepdiff import DeepDiff
@@ -187,6 +190,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     new_name = f"D:/project/translate/result/{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
     sheet = workbook.active
+    set_column_width(sheet, channel)
     sheet.append(msg)
     head = change_head(file)
     sheet.append(head)
@@ -202,6 +206,21 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
         get_line_value(datas[1], sheet)
     workbook.save(new_name)
 
+
+def set_column_width(sheet, channel):
+    """
+    :param sheet: 继承sheet方法
+    :param channel: 传入端名
+    :return:设置列宽
+    """
+    if channel == 'android':
+        for i in range(3, 22):
+            column_letter = get_column_letter(i)
+            sheet.column_dimensions[column_letter].width = 20
+    elif channel == 'ios':
+        for i in range(3, 52):
+            column_letter = get_column_letter(i)
+            sheet.column_dimensions[column_letter].width = 20
 
 def get_head(file):
     """
