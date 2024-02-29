@@ -11,9 +11,22 @@ def read_path(path):
 
 
 # 文件读取pandas
-def read_file(path):
+def read_xlsx_file(path):
+    """
+    :param path: 文件地址
+    :return: 返回文件
+    """
     file = pds.read_excel(path)
     # file = files.sort_values(by='key_name', inplace=True)
+    return file
+
+
+def read_csv_file(path):
+    """
+    :param path: 文件地址
+    :return: 返回文件
+    """
+    file = pds.read_csv(path)
     return file
 
 
