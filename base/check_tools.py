@@ -4,7 +4,7 @@ import string
 from openpyxl.utils import get_column_letter
 
 from base.read_all_files import find_file
-from base.trans_reading import read_file, rows
+from base.trans_reading import read_xlsx_file, rows, read_csv_file
 from deepdiff import DeepDiff
 import re
 import shutil
@@ -24,8 +24,8 @@ def start_check(channel):
     files = find_file(f"../data/{channel}_data", include_str="language",
                       filter_strs=["~"])
     fil = files[:-3:-1]
-    language1 = read_file(fil[0])
-    language2 = read_file(fil[1])
+    language1 = read_xlsx_file(fil[0])
+    language2 = read_xlsx_file(fil[1])
     check_tools(channel)
 
 
@@ -87,8 +87,8 @@ def check_tools(channel):
         else:
             msg2 = [f"本次只有新增，没有修改多语言"]
         generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
-        # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-        #             modify_quantity=len(datas2[0]), quantity=max1)
+        execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                    modify_quantity=len(datas2[0]), quantity=max1)
 
 
 def channel_num(channel):
@@ -221,6 +221,7 @@ def set_column_width(sheet, channel):
         for i in range(3, 22):
             column_letter = get_column_letter(i)
             sheet.column_dimensions[column_letter].width = 20
+
 
 def get_head(file):
     """
