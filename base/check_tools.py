@@ -12,7 +12,7 @@ import os
 import openpyxl
 from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
-from database_tools import execute_sql
+from base.database_tools import execute_sql
 
 
 def start_check(channel):
@@ -21,7 +21,7 @@ def start_check(channel):
     :return:
     """
     global language1, language2
-    files = find_file(f"D:/project/translate/data/{channel}_data", include_str="language",
+    files = find_file(f"D:/project/starx_project/translate/data/{channel}_data", include_str="language",
                       filter_strs=["~"])
     fil = files[:-3:-1]
     language1 = read_file(fil[0])
@@ -187,7 +187,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     :return: 写入表格文件
     """
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
-    new_name = f"D:/project/translate/result/{times}--{channel}--language_test.xlsx"
+    new_name = f"D:/project/starx_project/result/{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     set_column_width(sheet, channel)
@@ -267,7 +267,7 @@ def change_filename(client):
     # print(Dpath)
     import time
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
-    new_name = f"D:/project/translate/data/{client}_data/{times}language_{client}.xlsx"
+    new_name = f"D:/project/starx_project/data/{client}_data/{times}language_{client}.xlsx"
     en_file = find_file(Dpath, include_str='en', filter_strs=[".~"])
     shutil.move(en_file[0], new_name)
     print(f'{new_name}文件移动成功')
