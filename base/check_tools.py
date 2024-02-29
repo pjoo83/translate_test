@@ -259,19 +259,24 @@ def language_dic():
     return lan_dic
 
 
-def change_filename(client):
+def change_filename(channel):
     """
-    :param client: 传入对应端名称
+    :param channel: 传入对应端名称
     :return: 文件名修改，并移动到指定文件夹
     """
     Dpath = os.path.expanduser(r'~\Downloads')
     # print(Dpath)
-    import time
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
-    new_name = f"../data/{client}_data/{times}language_{client}.xlsx"
-    en_file = find_file(Dpath, include_str='en', filter_strs=[".~"])
-    shutil.move(en_file[0], new_name)
-    print(f'{new_name}文件移动成功')
+    if channel == 'server':
+        new_name = f"../data/{channel}_data/{times}language_{channel}.csv"
+        en_file = find_file(Dpath, include_str='en', filter_strs=[".~"])
+        shutil.move(en_file[0], new_name)
+        print(f'{new_name}文件移动成功')
+    else:
+        new_name = f"../data/{channel}_data/{times}language_{channel}.xlsx"
+        en_file = find_file(Dpath, include_str='en', filter_strs=[".~"])
+        shutil.move(en_file[0], new_name)
+        print(f'{new_name}文件移动成功')
 
 
 # 文件移动
