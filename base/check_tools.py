@@ -21,7 +21,7 @@ def start_check(channel):
     :return:
     """
     global language1, language2
-    files = find_file(f"D:/project/starx_project/translate/data/{channel}_data", include_str="language",
+    files = find_file(f"../data/{channel}_data", include_str="language",
                       filter_strs=["~"])
     fil = files[:-3:-1]
     language1 = read_file(fil[0])
@@ -87,8 +87,8 @@ def check_tools(channel):
         else:
             msg2 = [f"本次只有新增，没有修改多语言"]
         generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
-        execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                    modify_quantity=len(datas2[0]), quantity=max1)
+        # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+        #             modify_quantity=len(datas2[0]), quantity=max1)
 
 
 def channel_num(channel):
@@ -187,7 +187,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     :return: 写入表格文件
     """
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
-    new_name = f"D:/project/starx_project/result/{times}--{channel}--language_test.xlsx"
+    new_name = f"../result/{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     set_column_width(sheet, channel)
@@ -214,11 +214,11 @@ def set_column_width(sheet, channel):
     :return:设置列宽
     """
     if channel == 'android':
-        for i in range(3, 22):
+        for i in range(3, 27):
             column_letter = get_column_letter(i)
             sheet.column_dimensions[column_letter].width = 20
     elif channel == 'ios':
-        for i in range(3, 52):
+        for i in range(3, 22):
             column_letter = get_column_letter(i)
             sheet.column_dimensions[column_letter].width = 20
 
@@ -267,7 +267,7 @@ def change_filename(client):
     # print(Dpath)
     import time
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
-    new_name = f"D:/project/starx_project/data/{client}_data/{times}language_{client}.xlsx"
+    new_name = f"../data/{client}_data/{times}language_{client}.xlsx"
     en_file = find_file(Dpath, include_str='en', filter_strs=[".~"])
     shutil.move(en_file[0], new_name)
     print(f'{new_name}文件移动成功')
