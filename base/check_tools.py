@@ -1,8 +1,6 @@
 import time
 import string
-
 from openpyxl.utils import get_column_letter
-
 from base.read_all_files import find_file
 from base.trans_reading import read_xlsx_file, rows, read_csv_file
 from deepdiff import DeepDiff
@@ -24,9 +22,14 @@ def start_check(channel):
     files = find_file(f"../data/{channel}_data", include_str="language",
                       filter_strs=["~"])
     fil = files[:-3:-1]
-    language1 = read_xlsx_file(fil[0])
-    language2 = read_xlsx_file(fil[1])
-    check_tools(channel)
+    if channel == 'server':
+        language1 = read_csv_file(fil[0])
+        language2 = read_csv_file(fil[1])
+        check_tools(channel)
+    else:
+        language1 = read_xlsx_file(fil[0])
+        language2 = read_xlsx_file(fil[1])
+        check_tools(channel)
 
 
 # 检测
@@ -78,17 +81,22 @@ def check_tools(channel):
         rol = [i + 2 for i in rol]
         msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
         datas1 = different_data(language1)
-        datas2 = add_change_diff(language1)
-        datas = [datas1, datas2[0]]
-        # logger.info(f"第{rol}增加key{datas_key}")
-        if len(datas2[0]) > 0:
-            msg2 = [
-                f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+        if channel == 'server':
+            generate_xlsx(file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
+            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                        modify_quantity=0, quantity=max1)
         else:
-            msg2 = [f"本次只有新增，没有修改多语言"]
-        generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
-        execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                    modify_quantity=len(datas2[0]), quantity=max1)
+            datas2 = add_change_diff(language1)
+            datas = [datas1, datas2[0]]
+            # logger.info(f"第{rol}增加key{datas_key}")
+            if len(datas2[0]) > 0:
+                msg2 = [
+                    f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+            else:
+                msg2 = [f"本次只有新增，没有修改多语言"]
+            generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
+            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                        modify_quantity=len(datas2[0]), quantity=max1)
 
 
 def channel_num(channel):
@@ -154,9 +162,10 @@ def different_row_number():
     :return: 返回差异行
     """
     key_rol = []
-    dif_keys = different_key().keys()
-    for key in dif_keys:
-        dif_values = different_key()[key]
+    diff= different_key()
+    diff_keys = diff.keys()
+    for key in diff_keys:
+        dif_values = diff[key]
         for keys in dif_values:
             numbers_list = re.findall(r'\d+', keys)
             numbers = "".join(numbers_list)
