@@ -1,10 +1,8 @@
 from base.testing import TestingCase
 from base.base import Base
 import time
-from base.check_tools import change_filename
+from base.check_tools import change_filename,del_file
 from page.page_element import Test_language
-import unittest
-
 el = Test_language()
 
 
@@ -14,6 +12,7 @@ class TeslFlowDownload(TestingCase):
         """
              进行多语言文件下载
         """
+        del_file()
         self.getDriver.create_driver()
         self.getDriver.open_page(el.login_url)
         self.driver = Base(self.getDriver.driver)

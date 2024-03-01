@@ -62,7 +62,7 @@ def get_file_dic():
     """
     :return: 将文件与绝对路径组成字典
     """
-    file_list = find_file('../result', 'xlsx')[:-3:-1]
+    file_list = find_file('../result', 'xlsx')
     files_dic = {}
     for i in file_list:
         # 注意区分电脑版本，mac用/,win用\\
