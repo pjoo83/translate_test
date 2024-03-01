@@ -363,3 +363,18 @@ def color_fill(sheet, row, column):
     """
     fill = PatternFill('solid', fgColor='f8c600')
     sheet.cell(row, column).fill = fill
+
+
+def del_file():
+    """
+    :return:清空result下文件
+    """
+    import os
+    folder_path = "../result"
+    file_list = os.listdir(folder_path)
+    for file in file_list:
+        file_path = os.path.join(folder_path, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+    print("已成功删除文件夹下的所有文件")
