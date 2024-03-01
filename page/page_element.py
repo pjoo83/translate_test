@@ -76,7 +76,7 @@ class Test_language:
                                "%5B%5D=sr&locale_names%5B%5D=sv&locale_names%5B%5D=sw&locale_names%5B%5D=ta-IN" \
                                "&locale_names%5B%5D=te-IN&locale_names%5B%5D=th&locale_names%5B%5D=tl&locale_names%5B" \
                                "%5D=tr&locale_names%5B%5D=ur-PK&locale_names%5B%5D=vi&locale_names%5B%5D=zh-CN" \
-                               "&locale_names%5B%5D=zh-TW&locale_download%5Bfile_format%5D=xlsx&locale_download" \
+                               "&locale_names%5B%5D=zh-TW&locale_download%5Bfile_format%5D=csv&locale_download" \
                                "%5Bformat_options%5D%5Bdocument_id%5D=&locale_download%5Bformat_options%5D" \
                                "%5Binclude_headers%5D=0&locale_download%5Bformat_options%5D%5Binclude_headers%5D=1" \
                                "&locale_download%5Bformat_options%5D%5Bexport_tags%5D=0&locale_download" \
@@ -86,8 +86,7 @@ class Test_language:
                                "%5Bexclude_empty_zero_forms%5D=0&locale_download%5Binclude_unverified_translations%5D" \
                                "=0&locale_download%5Binclude_unverified_translations%5D=1&locale_download" \
                                "%5Buse_last_reviewed_version%5D=0&locale_download%5Btags%5D%5B%5D=&locale_download" \
-                               "%5Bkeep_notranslate_tags%5D=0&locale_download%5Brenders_default_locale%5D=0" \
-                               "&locale_download%5Bencoding%5D=UTF-8 "
+                               "%5Bkeep_notranslate_tags%5D=0&locale_download%5Bencoding%5D=UTF-8"
 
         # 请求unity
         self.download_unity = "https://app.phrase.com/accounts/starmaker-319c9ca6-0e8d-4fa3-8fa2-1ca0ea7692f0" \
