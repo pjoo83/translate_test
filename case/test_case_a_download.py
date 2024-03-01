@@ -39,7 +39,9 @@ class TeslFlowDownload(TestingCase):
         self.getDriver.open_page(url=el.download_ios)
         time.sleep(10)
         change_filename("ios")
-
+        self.getDriver.open_page(url=el.download_server)
+        time.sleep(120)
+        change_filename("server")
         # self.getDriver.open_page(url=el.download_unity)
         # time.sleep(4)
         # move_file("unity")
