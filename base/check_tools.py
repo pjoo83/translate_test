@@ -196,7 +196,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     :return: 写入表格文件
     """
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
-    new_name = f"../result/{times}--{channel}--language_test.xlsx"
+    new_name = f"../result/{channel}_result/{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     set_column_width(sheet, channel)
