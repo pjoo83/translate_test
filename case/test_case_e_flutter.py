@@ -11,7 +11,7 @@ class TeslFlowServer(TestingCase):
             服务端内容检查
         """
         self.getDriver.close_page()
-        files = find_file("../data/server_data", include_str="language_flutter", filter_strs=[".~"])
+        files = find_file("../data/flutter_data", include_str="language_flutter", filter_strs=[".~"])
         print(files)
         if len(files) > 1:
 
@@ -22,7 +22,7 @@ class TeslFlowServer(TestingCase):
 
 if __name__ == '__main__':
     suit = unittest.TestSuite()
-    case = TeslFlowServer("test_case_Server")
+    case = TeslFlowServer("test_case_flutter")
     suit.addTest(case)
     runner = unittest.TextTestRunner()
     runner.run(suit)
