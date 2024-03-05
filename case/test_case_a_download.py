@@ -32,6 +32,8 @@ class TeslFlowDownload(TestingCase):
         self.driver.base_click(el.android)
         self.driver.base_click(el.language)
         # 统一下载安卓和IOS
+        self.getDriver.open_page(url=el.download_flutter)
+        time.sleep(10)
         self.getDriver.open_page(url=el.download_android)
         time.sleep(10)
         change_filename("android")
