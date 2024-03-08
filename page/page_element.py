@@ -108,3 +108,23 @@ class Test_language:
                               "%5Binclude_unverified_translations%5D=1&locale_download%5Buse_last_reviewed_version%5D" \
                               "=0&locale_download%5Btags%5D%5B%5D=&locale_download%5Bkeep_notranslate_tags%5D=0" \
                               "&locale_download%5Brenders_default_locale%5D=0&locale_download%5Bencoding%5D=UTF-8 "
+
+        self.download_flutter = 'https://app.phrase.com/accounts/starmaker-319c9ca6-0e8d-4fa3-8fa2-1ca0ea7692f0/projects/' \
+                                'starmaker_flutter/locales/download?utf8=%E2%9C%93&locale_names%5B%5D=en&locale_names' \
+                                '%5B%5D=ar&locale_names%5B%5D=bn-IN&locale_names%5B%5D=cs&locale_names%5B%5D=de' \
+                                '&locale_names%5B%5D=es&locale_names%5B%5D=fr&locale_names%5B%5D=in&locale_names%5B%5D' \
+                                '=it&locale_names%5B%5D=ja&locale_names%5B%5D=ko&locale_names%5B%5D=ms&locale_names%5B' \
+                                '%5D=pt-BR&locale_names%5B%5D=ru-RU&locale_names%5B%5D=sr&locale_names%5B%5D=th' \
+                                '&locale_names%5B%5D=tr-TR&locale_names%5B%5D=ur-PK&locale_names%5B%5D=vi&locale_names' \
+                                '%5B%5D=zh-CN&locale_names%5B%5D=zh-TW&locale_download%5Bfile_format%5D=xlsx' \
+                                '&locale_download%5Bformat_options%5D%5Bdocument_id%5D=&locale_download' \
+                                '%5Bformat_options%5D%5Binclude_headers%5D=0&locale_download%5Bformat_options%5D' \
+                                '%5Binclude_headers%5D=1&locale_download%5Bformat_options%5D%5Bexport_tags%5D=0' \
+                                '&locale_download%5Bformat_options%5D%5Bexport_system_tags%5D=0&locale_download' \
+                                '%5Bformat_options%5D%5Bexport_max_characters_allowed%5D=0&locale_download' \
+                                '%5Binclude_empty_translations%5D=0&locale_download%5Binclude_translated_keys%5D=0' \
+                                '&locale_download%5Bexclude_empty_zero_forms%5D=0&locale_download' \
+                                '%5Binclude_unverified_translations%5D=0&locale_download' \
+                                '%5Binclude_unverified_translations%5D=1&locale_download%5Btags%5D%5B%5D' \
+                                '=&locale_download%5Bkeep_notranslate_tags%5D=0&locale_download' \
+                                '%5Brenders_default_locale%5D=0&locale_download%5Bencoding%5D=UTF-8'
