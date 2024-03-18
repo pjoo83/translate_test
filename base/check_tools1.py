@@ -1,7 +1,10 @@
 import time
 import string
+
+from openpyxl.utils import get_column_letter
+
 from read_all_files import find_file
-from trans_reading import read_file, rows
+from trans_reading import read_xlsx_file, rows, read_csv_file
 from deepdiff import DeepDiff
 import re
 import shutil
@@ -18,10 +21,16 @@ def start_check(channel):
     files = find_file(f"../data/{channel}_data", include_str="language", filter_strs=["~"])
     # mac排序与win相反
     # fil = files[:-3:-1]
-    fil = files[::2]
-    language1 = read_file(fil[0]).sort_values(by="key_name")
-    language2 = read_file(fil[1]).sort_values(by="key_name")
-    check_tools(channel)
+    fil = files
+    print(fil)
+    if channel == 'server':
+        language1 = read_csv_file(fil[0])
+        language2 = read_csv_file(fil[1])
+        check_tools(channel)
+    else:
+        language1 = read_xlsx_file(fil[0])
+        language2 = read_xlsx_file(fil[1])
+        check_tools(channel)
 
 
 # 检测
@@ -40,13 +49,14 @@ def check_tools(channel):
             generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
         else:
             # logger.info("本次内容未新增key,下面进行内容检查")
-            dif_msg = different_msg()
-            if len(dif_msg[0]) > 0:
+            dif_msg = different_msg()[0]
+            if len(dif_msg) > 0:
                 msg = [
-                    f"本次检测共有{len(dif_msg[0])}条的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+                    f"本次检测共有{len(dif_msg)}条的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
                 msg2 = []
                 data = ""
-                generate_xlsx(file=language1, file_list=dif_msg[0], msg=msg, channel=channel, msg2=msg2, datas=data)
+                print(msg)
+                generate_xlsx(file=language1, file_list=dif_msg, msg=msg, channel=channel, msg2=msg2, datas=data)
             else:
                 # logger.info(f"本次未修改KEY，也未对值进行修改")
                 print(f"本次未修改KEY，也未对值进行修改")
@@ -65,23 +75,23 @@ def check_tools(channel):
         rol = different_row_number()
         rol = [i + 2 for i in rol]
         msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
-        # print(msg)
         datas1 = different_data(language1)
-        # print(datas1)
-        datas2 = add_change_diff(language1)
-        # print(datas2, 'data2...............')
-        datas = [datas1, datas2[0]]
-        # logger.info(f"第{rol}增加key{datas_key}")
-        if len(datas2[0]) > 0:
-
-            msg2 = [
-                f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
-
+        if channel == 'server':
+            generate_xlsx(file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
+            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                        modify_quantity=0, quantity=max1)
         else:
-            msg2 = [f"本次只有新增，没有修改多语言"]
-        generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
-        execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                    modify_quantity=len(datas2[0]), quantity=max1)
+            datas2 = add_change_diff(language1)
+            datas = [datas1, datas2[0]]
+            # logger.info(f"第{rol}增加key{datas_key}")
+            if len(datas2[0]) > 0:
+                msg2 = [
+                    f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+            else:
+                msg2 = [f"本次只有新增，没有修改多语言"]
+            generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
+            # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+            #             modify_quantity=len(datas2[0]), quantity=max1)
 
         # 获取差异key 与行数
 
@@ -90,7 +100,6 @@ def different_key():
     old_file = language2.iloc[:, 0].tolist()
     new_file = language1.iloc[:, 0].tolist()
     diff = DeepDiff(old_file, new_file)
-    # print(diff, 222222222222222222222)
     return diff
 
 
@@ -136,12 +145,24 @@ def add_change_diff(language):
     return diff_msg, diff
 
 
+def sort_list(file_list):
+    """
+    :param file_list: 传入列表
+    :return: 返回排序后的列表
+    """
+    new_file_list = sorted(file_list, key=lambda x: x[0].lower())
+    original_case_map = {word.lower(): word for word in file_list}
+    sorted_list = [[original_case_map[word.lower()] for word in sublist] for sublist in new_file_list]
+    return sorted_list
+
+
 # 获取差异行
 def different_row_number():
     key_rol = []
-    dif_keys = different_key().keys()
-    for key in dif_keys:
-        dif_values = different_key()[key]
+    diff = different_key()
+    diff_keys = diff.keys()
+    for key in diff_keys:
+        dif_values = diff[key]
         for keys in dif_values:
             numbers_list = re.findall(r'\d+', keys)
             numbers = "".join(numbers_list)
@@ -164,6 +185,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     new_name = f"../result/{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
     sheet = workbook.active
+    set_column_width(sheet, channel)
     sheet.append(msg)
     head = change_head(file)
     sheet.append(head)
@@ -180,7 +202,22 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     workbook.save(new_name)
 
 
-# 获取表头
+def set_column_width(sheet, channel):
+    """
+    :param sheet: 继承sheet方法
+    :param channel: 传入端名
+    :return:设置列宽
+    """
+    if channel == 'android':
+        for i in range(3, 27):
+            column_letter = get_column_letter(i)
+            sheet.column_dimensions[column_letter].width = 20
+    elif channel == 'ios':
+        for i in range(3, 22):
+            column_letter = get_column_letter(i)
+            sheet.column_dimensions[column_letter].width = 20
+
+
 def get_head(file):
     head = file.keys().tolist()
     return head
@@ -244,7 +281,6 @@ def get_line_value(values, sheet):
     max2 = rows(language2)
     line = max1 - max2 + 4
     for i in range(len(values)):
-
         for k, v in values[i].items():
             for k1, v1 in v.items():
                 line1 = change_int(k1) + 3
@@ -279,4 +315,22 @@ def color_fill(sheet, row, column):
     sheet.cell(row, column).fill = fill
 
 
-start_check('android')
+start_check('ios')
+
+
+def del_file():
+    """
+    :return:清空result下文件
+    """
+    import os
+    folder_path = "../result"
+    file_list = os.listdir(folder_path)
+    for file in file_list:
+        file_path = os.path.join(folder_path, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+    print("已成功删除文件夹下的所有文件")
+
+
+# del_file()
