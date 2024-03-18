@@ -12,8 +12,11 @@ def get_tenant_access_token():
     body = fei.req_token_body
     headers = fei.content_type
     request = requests.post(url=fei.tenant_access_url_token, json=body, headers=headers)
-    tenant_token = request.json()['tenant_access_token']
-    return tenant_token
+    if request.json()['code'] == 0:
+        tenant_token = request.json()['tenant_access_token']
+        return tenant_token
+    else:
+        get_tenant_access_token()
 
 
 def get_app_access_token():
@@ -40,4 +43,5 @@ def get_user_access_token():
     response = requests.post(url=fei.user_access_token, headers=headers, data=payload)
     body = response.text
     return response.json()
+
 
