@@ -1,3 +1,5 @@
+import unittest
+
 from base.testing import TestingCase
 from base.base import Base
 import time
@@ -33,6 +35,8 @@ class TeslFlowDownload(TestingCase):
         self.driver.base_click(el.language)
         # 统一下载安卓和IOS
         self.getDriver.open_page(url=el.download_flutter)
+        time.sleep(2)
+        change_filename("flutter")
         time.sleep(10)
         self.getDriver.open_page(url=el.download_android)
         time.sleep(10)
@@ -48,9 +52,9 @@ class TeslFlowDownload(TestingCase):
         # move_file("unity")
 
 
-# if __name__ == '__main__':
-#     suit = unittest.TestSuite()
-#     case = TeslFlowDownload("test_case_download")
-#     suit.addTest(case)
-#     runner = unittest.TextTestRunner()
-#     runner.run(suit)
+if __name__ == '__main__':
+    suit = unittest.TestSuite()
+    case = TeslFlowDownload("test_case_download")
+    suit.addTest(case)
+    runner = unittest.TextTestRunner()
+    runner.run(suit)

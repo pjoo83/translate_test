@@ -162,7 +162,7 @@ def different_row_number():
     :return: 返回差异行
     """
     key_rol = []
-    diff= different_key()
+    diff = different_key()
     diff_keys = diff.keys()
     for key in diff_keys:
         dif_values = diff[key]
@@ -370,7 +370,7 @@ def del_file():
     :return:清空result下文件
     """
     import os
-    folder_path = "../result"
+    folder_path = r"D:\project\starx_project\translate\result"
     file_list = os.listdir(folder_path)
     for file in file_list:
         file_path = os.path.join(folder_path, file)
