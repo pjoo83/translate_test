@@ -19,7 +19,7 @@ def start_check(channel):
     :return:
     """
     global language1, language2
-    files = find_file(fr"D:\project\starx_project\translate\data\{channel}_data", include_str="language",
+    files = find_file(fr"{absolute_path('data')}\{channel}_data", include_str="language",
                       filter_strs=["~"])
     fil = files[:-3:-1]
     if channel == 'server':
@@ -196,7 +196,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     :return: 写入表格文件
     """
     times = time.strftime('%Y年%m月%d日 %H点-%M分', time.localtime(time.time()))
-    new_name = fr"D:\project\starx_project\translate\result\{times}--{channel}--language_test.xlsx"
+    new_name = fr"{absolute_path('result')}\{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     set_column_width(sheet, channel)
@@ -277,12 +277,12 @@ def change_filename(channel):
     # print(Dpath)
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
     if channel == 'server':
-        new_name = f"../data/{channel}_data/{times}language_{channel}.csv"
+        new_name = f"{absolute_path('data')}/{channel}_data/{times}language_{channel}.csv"
         en_file = find_file(Dpath, include_str='en', filter_strs=[".~"])
         shutil.move(en_file[0], new_name)
         print(f'{new_name}文件移动成功')
     else:
-        new_name = f"../data/{channel}_data/{times}language_{channel}.xlsx"
+        new_name =f"{absolute_path('data')}/{channel}_data/{times}language_{channel}.xlsx"
         en_file = find_file(Dpath, include_str='en', filter_strs=[".~"])
         shutil.move(en_file[0], new_name)
         print(f'{new_name}文件移动成功')
@@ -370,7 +370,7 @@ def del_file():
     :return:清空result下文件
     """
     import os
-    folder_path = r"D:\project\starx_project\translate\result"
+    folder_path = fr"{absolute_path('result')}"
     file_list = os.listdir(folder_path)
     for file in file_list:
         file_path = os.path.join(folder_path, file)
@@ -378,3 +378,12 @@ def del_file():
             os.remove(file_path)
 
     print("已成功删除文件夹下的所有文件")
+
+
+def absolute_path(data):
+    """
+    :return: 获取绝对路径
+    """
+    folder_name = f'{data}'
+    folder_path = os.path.abspath(folder_name)
+    return folder_path
