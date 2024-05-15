@@ -1,28 +1,16 @@
-import unittest
-from base.read_all_files import find_file
 from base.check_tools import start_check
-from base.testing import TestingCase
+from base.read_all_files import find_file
 
 
-class TeslFlowServer(TestingCase):
-
-    def test_check(self):
-        """
+def test_check():
+    """
             服务端内容检查
         """
-        self.getDriver.close_page()
-        files = find_file("../data/server_data", include_str="language_server", filter_strs=[".~"])
-        print(files)
-        if len(files) > 1:
+    files = find_file(r"D:\project\starx_project\translate\data\server_data", include_str="language_server",
+                      filter_strs=[".~"])
+    if len(files) > 1:
 
-            start_check("server")
-        else:
-            print("server_data文件中只有一个多语言文件，需要再下一份，保持文件夹中有两文件，就可以开始")
+        start_check("server")
+    else:
+        print("server_data文件中只有一个多语言文件，需要再下一份，保持文件夹中有两文件，就可以开始")
 
-
-if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    case = TeslFlowServer("test_case_Server")
-    suit.addTest(case)
-    runner = unittest.TextTestRunner()
-    runner.run(suit)

@@ -1,4 +1,3 @@
-import pytest
 from page.page_element import Test_language
 from base.interface_download import download
 
@@ -33,7 +32,3 @@ def test_download_server():
     :return: 服务文件下载
     """
     download('server', A.download_server, A.download_common_cookie)
-
-
-if __name__ == '__main__':
-    pytest.main()

@@ -3,8 +3,9 @@ import unittest
 from base.testing import TestingCase
 from base.base import Base
 import time
-from base.check_tools import change_filename,del_file
+from base.check_tools import change_filename, del_file
 from page.page_element import Test_language
+
 el = Test_language()
 
 
@@ -50,11 +51,3 @@ class TeslFlowDownload(TestingCase):
         # self.getDriver.open_page(url=el.download_unity)
         # time.sleep(4)
         # move_file("unity")
-
-
-if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    case = TeslFlowDownload("test_case_download")
-    suit.addTest(case)
-    runner = unittest.TextTestRunner()
-    runner.run(suit)
