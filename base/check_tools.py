@@ -19,7 +19,7 @@ def start_check(channel):
     :return:
     """
     global language1, language2
-    files = find_file(fr"{absolute_path('data')}\{channel}_data", include_str="language",
+    files = find_file(fr"{absolute_path('../data')}/{channel}_data", include_str="language",
                       filter_strs=["~"])
     fil = files[:-3:-1]
     if channel == 'server':
