@@ -19,7 +19,7 @@ def start_check(channel):
     :return:
     """
     global language1, language2
-    files = find_file(f"../data/{channel}_data", include_str="language",
+    files = find_file(fr"D:\project\starx_project\translate\data\{channel}_data", include_str="language",
                       filter_strs=["~"])
     fil = files[:-3:-1]
     if channel == 'server':
@@ -195,8 +195,8 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     :param datas:变化的内容
     :return: 写入表格文件
     """
-    times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
-    new_name = f"../result/{times}--{channel}--language_test.xlsx"
+    times = time.strftime('%Y年%m月%d日 %H点-%M分', time.localtime(time.time()))
+    new_name = fr"D:\project\starx_project\translate\result\{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     set_column_width(sheet, channel)
