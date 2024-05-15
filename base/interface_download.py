@@ -70,10 +70,10 @@ def download(channel, url, cookie):
 def file_name(channel):
     times = time.strftime('%Y年%m月%d日 %H点-%M分', time.localtime(time.time()))
     if channel == 'server':
-        new_name = f"/Users/lbj/Desktop/starx/project/translate_test/data/{channel}_data/{times}language_{channel}.csv"
+        new_name = f"../data/{channel}_data/{times}language_{channel}.csv"
         return new_name
     else:
-        new_name = f"/Users/lbj/Desktop/starx/project/translate_test/data/{channel}_data/{times}language_{channel}.xlsx"
+        new_name = f"../data/{channel}_data/{times}language_{channel}.xlsx"
         return new_name
 
 
