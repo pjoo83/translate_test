@@ -1,7 +1,7 @@
 import requests
 import time
 from page.page_element import Test_language
-from check_tools import absolute_path
+from base.check_tools import absolute_path
 
 A = Test_language()
 
