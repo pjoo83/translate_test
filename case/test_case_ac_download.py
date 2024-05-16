@@ -10,8 +10,6 @@ def test_download_flutter():
     """
     if download('flutter', A.download_flutter, A.download_common_cookie):
         print("flutter文件已完成下载")
-    else:
-        print("flutter文件已完成下载下载失败")
 
 
 def test_download_android():
@@ -20,8 +18,6 @@ def test_download_android():
      """
     if download('android', A.download_android, A.download_common_cookie):
         print("android文件已完成下载")
-    else:
-        print("android文件已完成下载下载失败")
 
 
 def test_download_ios():
@@ -30,8 +26,6 @@ def test_download_ios():
     """
     if download('ios', A.download_ios, A.download_common_cookie):
         print("ios文件已完成下载")
-    else:
-        print("ios文件已完成下载下载失败")
 
 
 def test_download_server():
@@ -40,6 +34,3 @@ def test_download_server():
     """
     if download('server', A.download_server, A.download_common_cookie):
         print("server文件已完成下载")
-    else:
-        print("server文件已完成下载下载失败")
-
