@@ -7,11 +7,10 @@ def test_check():
     """
         安卓内容检查
     """
-    files = find_file(fr"{absolute_path('../data/android_data')}", include_str="language_android",
+    files = find_file(fr"{absolute_path('data/android_data')}", include_str="language_android",
                       filter_strs=[".~"])
     for i in range(3):
         if len(files) > 1:
-
             start_check("android")
             break
         else:

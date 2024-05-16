@@ -25,6 +25,7 @@ import time
 #     runner.run(get_allcase())
 
 import os
+from base.check_tools import absolute_path
 import pytest
 
-pytest.main(["-s", r"D:\project\starx_project\translate\case"])
+pytest.main(["-s", f"{absolute_path('case')}"])
