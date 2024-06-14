@@ -96,7 +96,7 @@ def check_tools(channel):
                 msg2 = [f"本次只有新增，没有修改多语言"]
             generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
             execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                        modify_quantity=len(datas2[0]), quantity=max1)
+                        modify_quantity=0, quantity=max1)
 
 
 def channel_num(channel):
@@ -104,7 +104,7 @@ def channel_num(channel):
     :param channel: 端名称
     :return: 返回对应的id
     """
-    channel_dict = {"android": 1, "ios": 2, 'server': 3, 'unity': 4}
+    channel_dict = {"android": 1, "ios": 2, 'server': 3, 'unity': 4,'flutter':5}
     channel_number = channel_dict[channel]
     return channel_number
 
