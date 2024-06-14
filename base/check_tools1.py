@@ -14,6 +14,7 @@ import openpyxl
 from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
 from database_tools import execute_sql
+from translate import translate_text
 
 
 def start_check(channel):
@@ -22,7 +23,6 @@ def start_check(channel):
     # mac排序与win相反
     # fil = files[:-3:-1]
     fil = files
-    print(fil)
     if channel == 'server':
         language1 = read_csv_file(fil[0])
         language2 = read_csv_file(fil[1])
@@ -175,7 +175,10 @@ def different_data(file_name):
     data_list = []
     dif_num = different_row_number()
     for data_num in dif_num:
-        data_list.append(file_name.loc[data_num].to_list())
+        for i in file_name.loc[data_num].to_list():
+            data_list.append(f"{i}:::{translate_text(i)}")
+        # data_list.append(file_name.loc[data_num].to_list())
+    print(data_list)
     return data_list
 
 
@@ -315,9 +318,6 @@ def color_fill(sheet, row, column):
     sheet.cell(row, column).fill = fill
 
 
-start_check('ios')
-
-
 def del_file():
     """
     :return:清空result下文件
@@ -333,4 +333,4 @@ def del_file():
     print("已成功删除文件夹下的所有文件")
 
 
-# del_file()
+start_check('ios')
