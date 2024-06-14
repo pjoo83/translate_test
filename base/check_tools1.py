@@ -78,8 +78,8 @@ def check_tools(channel):
         datas1 = different_data(language1)
         if channel == 'server':
             generate_xlsx(file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
-            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                        modify_quantity=0, quantity=max1)
+            # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+            #             modify_quantity=0, quantity=max1)
         else:
             datas2 = add_change_diff(language1)
             datas = [datas1, datas2[0]]
