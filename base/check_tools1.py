@@ -21,8 +21,8 @@ def start_check(channel):
     global language1, language2
     files = find_file(f"../data/{channel}_data", include_str="language", filter_strs=["~"])
     # mac排序与win相反
-    fil = files[:-3:-1]
-    # fil = files
+    # fil = files[:-3:-1]
+    fil = files
     if channel == 'server':
         language1 = read_csv_file(fil[0])
         language2 = read_csv_file(fil[1])
@@ -76,7 +76,7 @@ def check_tools(channel):
         rol = [i + 2 for i in rol]
         msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
         datas1 = different_data(language1)
-        translate_date = translated_datas(datas1)
+        translate_date = translated_datas(datas1, channel)
         if channel == 'server':
             generate_xlsx(file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
             # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
@@ -97,9 +97,20 @@ def check_tools(channel):
         # 获取差异key 与行数
 
 
-def translated_datas(original_list):
-    translated_list = []
+def translated_datas(original_list, channel):
+    ios_language_list = ['en', 'ar', 'bn', 'de', 'auto', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th', 'tr', 'ur',
+                         'auto', 'zh', 'auto']
+    android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'auto', 'fr', 'in', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
+                             'sr', 'th', 'tr', 'tr', 'ur', 'auto', 'zh', 'zh']
+    if channel == 'ios':
+        return translated_datas_start(original_list, ios_language_list)
+    elif channel == 'android':
+        return translated_datas_start(original_list, android_language_list)
 
+
+def translated_datas_start(original_list, language):
+    translated_list = []
+    t = 0
     for sublist in original_list:
         translated_sublist = []
         for text in sublist:
@@ -107,7 +118,9 @@ def translated_datas(original_list):
                 translated_sublist.append(text)
                 continue
             else:
-                translated_sublist.append(f"{text}翻译:{translate_text(text)}")
+                translated_sublist.append(f"“{text}”翻译:{translate_text(text, src=language[t])}")
+                print(translated_sublist)
+                t += 1
         translated_list.append(translated_sublist)
     return translated_list
 
