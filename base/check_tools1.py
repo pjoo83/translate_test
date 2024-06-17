@@ -21,8 +21,8 @@ def start_check(channel):
     global language1, language2
     files = find_file(f"../data/{channel}_data", include_str="language", filter_strs=["~"])
     # mac排序与win相反
-    # fil = files[:-3:-1]
-    fil = files
+    fil = files[:-3:-1]
+    # fil = files
     if channel == 'server':
         language1 = read_csv_file(fil[0])
         language2 = read_csv_file(fil[1])
@@ -98,8 +98,8 @@ def check_tools(channel):
 
 
 def translated_datas(original_list, channel):
-    ios_language_list = ['en', 'ar', 'bn', 'de', 'auto', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th', 'tr', 'ur',
-                         'auto', 'zh', 'auto']
+    ios_language_list = ['en', 'ar', 'bn', 'bn', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th',
+                         'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
     android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'auto', 'fr', 'in', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
                              'sr', 'th', 'tr', 'tr', 'ur', 'auto', 'zh', 'zh']
     if channel == 'ios':
@@ -110,17 +110,21 @@ def translated_datas(original_list, channel):
 
 def translated_datas_start(original_list, language):
     translated_list = []
-    t = 0
+
     for sublist in original_list:
         translated_sublist = []
+        t = 0
+        translated_sublist.append(sublist[0])
+        sublist.remove(sublist[0])
         for text in sublist:
-            if text is None or str(text).lower() == 'nan' or '_' in text:
+            if text is None or str(text).lower() == 'nan':
                 translated_sublist.append(text)
-                continue
+                t += 1
             else:
                 translated_sublist.append(f"“{text}”翻译:{translate_text(text, src=language[t])}")
-                print(translated_sublist)
                 t += 1
+                print(translated_sublist)
+
         translated_list.append(translated_sublist)
     return translated_list
 
