@@ -107,7 +107,7 @@ def translated_datas(original_list):
                 translated_sublist.append(text)
                 continue
             else:
-                translated_sublist.append(f"{text}:::{translate_text(text)}")
+                translated_sublist.append(f"{text}翻译:{translate_text(text)}")
         translated_list.append(translated_sublist)
     return translated_list
 
