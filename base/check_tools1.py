@@ -76,13 +76,18 @@ def check_tools(channel):
         rol = [i + 2 for i in rol]
         msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
         datas1 = different_data(language1)
+        datas3 = []
+        for i in datas1:
+            for z in i:
+                datas3.append(f"{z}:::{translate_text(z)}")
+                print(datas3)
         if channel == 'server':
             generate_xlsx(file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
             # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
             #             modify_quantity=0, quantity=max1)
         else:
             datas2 = add_change_diff(language1)
-            datas = [datas1, datas2[0]]
+            datas = [datas3, datas2[0]]
             # logger.info(f"第{rol}增加key{datas_key}")
             if len(datas2[0]) > 0:
                 msg2 = [
@@ -175,10 +180,7 @@ def different_data(file_name):
     data_list = []
     dif_num = different_row_number()
     for data_num in dif_num:
-        for i in file_name.loc[data_num].to_list():
-            data_list.append(f"{i}:::{translate_text(i)}")
-        # data_list.append(file_name.loc[data_num].to_list())
-    print(data_list)
+        data_list.append(file_name.loc[data_num].to_list())
     return data_list
 
 
