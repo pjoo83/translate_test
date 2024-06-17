@@ -21,8 +21,8 @@ def start_check(channel):
     global language1, language2
     files = find_file(f"../data/{channel}_data", include_str="language", filter_strs=["~"])
     # mac排序与win相反
-    # fil = files[:-3:-1]
-    fil = files
+    fil = files[:-3:-1]
+    # fil = files
     if channel == 'server':
         language1 = read_csv_file(fil[0])
         language2 = read_csv_file(fil[1])
@@ -76,18 +76,14 @@ def check_tools(channel):
         rol = [i + 2 for i in rol]
         msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
         datas1 = different_data(language1)
-        datas3 = []
-        for i in datas1:
-            for z in i:
-                datas3.append(f"{z}:::{translate_text(z)}")
-                print(datas3)
+        translate_date = translated_datas(datas1)
         if channel == 'server':
             generate_xlsx(file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
             # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
             #             modify_quantity=0, quantity=max1)
         else:
             datas2 = add_change_diff(language1)
-            datas = [datas3, datas2[0]]
+            datas = [translate_date, datas2[0]]
             # logger.info(f"第{rol}增加key{datas_key}")
             if len(datas2[0]) > 0:
                 msg2 = [
@@ -99,6 +95,21 @@ def check_tools(channel):
             #             modify_quantity=len(datas2[0]), quantity=max1)
 
         # 获取差异key 与行数
+
+
+def translated_datas(original_list):
+    translated_list = []
+
+    for sublist in original_list:
+        translated_sublist = []
+        for text in sublist:
+            if text is None or str(text).lower() == 'nan' or '_' in text:
+                translated_sublist.append(text)
+                continue
+            else:
+                translated_sublist.append(f"{text}:::{translate_text(text)}")
+        translated_list.append(translated_sublist)
+    return translated_list
 
 
 def different_key():
@@ -216,11 +227,14 @@ def set_column_width(sheet, channel):
     if channel == 'android':
         for i in range(3, 27):
             column_letter = get_column_letter(i)
-            sheet.column_dimensions[column_letter].width = 20
+            sheet.column_dimensions[column_letter].width = 30
     elif channel == 'ios':
-        for i in range(3, 22):
-            column_letter = get_column_letter(i)
-            sheet.column_dimensions[column_letter].width = 20
+        for i in range(3, 24):
+            if i == 6 or i == 20:
+                pass
+            else:
+                column_letter = get_column_letter(i)
+                sheet.column_dimensions[column_letter].width = 30
 
 
 def get_head(file):
