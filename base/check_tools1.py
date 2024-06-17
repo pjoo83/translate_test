@@ -102,11 +102,20 @@ def translated_datas(original_list, channel):
                          'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
     android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
                              'sr', 'th', 'tr', 'tr', 'ur', 'zh-cn', 'auto', 'auto', 'auto']
-    server_language_list = ['en', 'af']
+    server_language_list = ['en', 'af', 'ar', 'ar', 'bn', 'ez', 'da', 'de', 'en', 'es', 'es', 'fr', 'hi', 'hi', 'in',
+                            'it', 'ja', 'kn', 'ko', 'ml', 'ms', 'my', 'pa', 'pt', 'ru', 'sr', 'sv', 'sw', 'ta', 'te',
+                            'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto']
+    flutter_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'se', 'fr', 'in', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'sr',
+                             'th', 'tr', 'ur',
+                             'vi', 'zh-cn', 'auto', 'auto']
     if channel == 'ios':
         return translated_datas_start(original_list, ios_language_list)
     elif channel == 'android':
         return translated_datas_start(original_list, android_language_list)
+    elif channel == 'server':
+        return translated_datas_start(original_list, server_language_list)
+    else:
+        return translated_datas_start(original_list, flutter_language_list)
 
 
 def translated_datas_start(original_list, language):
@@ -243,12 +252,22 @@ def del_cols(channel, sheet):
     """
     android_cols_to_delete = [7, 17, 19, 21]
     ios_cols_to_delete = [6, 20, 24]
+    flutter_cols_to_delete = [7, 18]
+    server_cols_to_delete = [7, 9, 10, 12, 14, 16, 17, 21, 23, 25, 26, 29, 30, 31, 32, 33, 35]
     if channel == 'android':
         cols_to_delete = sorted(android_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
         for col in cols_to_delete:
             sheet.delete_cols(col)
-    if channel == 'ios':
+    elif channel == 'ios':
         cols_to_delete = sorted(ios_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
+        for col in cols_to_delete:
+            sheet.delete_cols(col)
+    elif channel == 'flutter':
+        cols_to_delete = sorted(flutter_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
+        for col in cols_to_delete:
+            sheet.delete_cols(col)
+    else:
+        cols_to_delete = sorted(server_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
         for col in cols_to_delete:
             sheet.delete_cols(col)
 
