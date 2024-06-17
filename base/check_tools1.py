@@ -100,8 +100,9 @@ def check_tools(channel):
 def translated_datas(original_list, channel):
     ios_language_list = ['en', 'ar', 'bn', 'bn', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th',
                          'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
-    android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'auto', 'fr', 'in', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
-                             'sr', 'th', 'tr', 'tr', 'ur', 'auto', 'zh', 'zh']
+    android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
+                             'sr', 'th', 'tr', 'tr', 'ur', 'zh-cn', 'auto', 'auto', 'auto']
+    server_language_list = ['en', 'af']
     if channel == 'ios':
         return translated_datas_start(original_list, ios_language_list)
     elif channel == 'android':
@@ -232,7 +233,24 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     insert_edit_cols(sheet)
     if datas != "":
         get_line_value(datas[1], sheet)
+    del_cols(channel, sheet)
     workbook.save(new_name)
+
+
+def del_cols(channel, sheet):
+    """
+    删除列
+    """
+    android_cols_to_delete = [7, 17, 19, 21]
+    ios_cols_to_delete = [6, 20, 24]
+    if channel == 'android':
+        cols_to_delete = sorted(android_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
+        for col in cols_to_delete:
+            sheet.delete_cols(col)
+    if channel == 'ios':
+        cols_to_delete = sorted(ios_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
+        for col in cols_to_delete:
+            sheet.delete_cols(col)
 
 
 def set_column_width(sheet, channel):
@@ -247,11 +265,8 @@ def set_column_width(sheet, channel):
             sheet.column_dimensions[column_letter].width = 30
     elif channel == 'ios':
         for i in range(3, 24):
-            if i == 6 or i == 20:
-                pass
-            else:
-                column_letter = get_column_letter(i)
-                sheet.column_dimensions[column_letter].width = 30
+            column_letter = get_column_letter(i)
+            sheet.column_dimensions[column_letter].width = 30
 
 
 def get_head(file):
