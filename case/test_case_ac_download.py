@@ -1,6 +1,6 @@
 from page.page_element import Test_language
 from base.interface_download import download
-
+from base.check_tools import  del_file
 A = Test_language()
 
 
@@ -8,6 +8,7 @@ def test_download_flutter():
     """
         :return: flutter文件下载
     """
+    del_file()
     if download('flutter', A.download_flutter, A.download_common_cookie):
         print("flutter文件已完成下载")
 
