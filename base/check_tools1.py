@@ -15,7 +15,7 @@ from openpyxl.comments import Comment
 from database_tools import execute_sql
 from translate import translate_text
 from baidu_ai import main
-
+import pandas as pd
 
 def start_check(channel):
     global language1, language2
@@ -248,8 +248,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
         get_line_value(datas[1], sheet)
     del_cols(channel, sheet)
     workbook.save(new_name)
-    change_data(sheet)
-    workbook.save(new_name)
+    # change_data(new_name)
 
 
 def del_cols(channel, sheet):
@@ -278,15 +277,15 @@ def del_cols(channel, sheet):
             sheet.delete_cols(col)
 
 
-def change_data(sheet):
-    # 跟换列数据
-    max_column = sheet.max_column
-    for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=1, max_col=max_column, values_only=False):
-        b_value = row[1].value  # B 列的值
-        last_column_value = row[-1].value
-        row[2].value = last_column_value
-        row[-1].value = b_value  # 将 B 列的值赋给最后一列
-
+# def change_data(sheet):
+#     # 跟换列数据
+#     max_column = sheet.max_column
+#     for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=0, max_col=max_column, values_only=False):
+#         # b_value = row[3].value  # B 列的值
+#         last_column_value = row[-1].value
+#         row[2].value = last_column_value
+#         # row[-1].value = b_value  # 将 B 列的值赋给最后一列
+#
 
 def set_column_width(sheet, channel):
     """
