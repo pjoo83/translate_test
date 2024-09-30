@@ -12,6 +12,7 @@ from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
 from base.database_tools import execute_sql
 from base.translate import translate_text
+from base.baidu_ai import main
 
 
 def start_check(channel):
@@ -131,6 +132,7 @@ def translated_datas_start(original_list, language):
     translated_list = []
     for sublist in original_list:
         translated_sublist = []
+        translate = []
         t = 0
         translated_sublist.append(sublist[0])
         sublist.remove(sublist[0])
@@ -139,10 +141,17 @@ def translated_datas_start(original_list, language):
                 translated_sublist.append(text)
                 t += 1
             else:
-                translated_sublist.append(f"“{text}”翻译:{translate_text(text, src=language[t])}")
+                hans = translate_text(text, src=language[t])
+                translated_sublist.append(f"“{text}”翻译:{hans}")
                 t += 1
                 print(translated_sublist)
-
+                translate.append(hans)
+                translate.append(hans)
+        trans_data = main(translate)
+        if "不相近" in trans_data:
+            translated_sublist.append(trans_data)
+        else:
+            translated_sublist.append('该多语言文案翻译的意思相近')
         translated_list.append(translated_sublist)
     return translated_list
 
