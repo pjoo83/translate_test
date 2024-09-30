@@ -23,7 +23,7 @@ def start_check(channel):
     :return:
     """
     global language1, language2
-    files = find_file(f"/Users/lbj/Desktop/starx/project/translate_test/data/{channel}_data", include_str="language",
+    files = find_file(f"../data/{channel}_data", include_str="language",
                       filter_strs=["~"])
     # mac排序与win相反
     fil = files[:-3:-1]
@@ -147,10 +147,10 @@ def translated_datas_start(original_list, language):
                 # print(translated_sublist)
                 translate.append(hans)
         trans_data = main(translate)
-        if "意思相近" or "都是相近的" or "意思是相近的" in  trans_data:
-            translated_sublist.append('该多语言文案翻译都内容都相近')
-        else:
+        if "不相近" in trans_data:
             translated_sublist.append(trans_data)
+        else:
+            translated_sublist.append('该多语言文案翻译的意思相近')
         translated_list.append(translated_sublist)
     return translated_list
 
