@@ -12,12 +12,16 @@ from time import sleep
 import openpyxl
 from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
-from database_tools import execute_sql
 from translate import translate_text
 from baidu_ai import main
 import pandas as pd
 
+
 def start_check(channel):
+    """
+    :param channel:传入对应的端
+    :return:
+    """
     global language1, language2
     files = find_file(f"/Users/lbj/Desktop/starx/project/translate_test/data/{channel}_data", include_str="language",
                       filter_strs=["~"])
@@ -36,6 +40,10 @@ def start_check(channel):
 
 # 检测
 def check_tools(channel):
+    """
+     :param channel: 选择对应端
+     :return: 返回差异内容
+     """
     max1 = rows(language1)
     max2 = rows(language2)
     if max1 == max2:
@@ -138,20 +146,29 @@ def translated_datas_start(original_list, language):
                 t += 1
                 # print(translated_sublist)
                 translate.append(hans)
-        translated_sublist.append(main(translate))
+        trans_data = main(translate)
+        if "意思相近" or "都是相近的" or "意思是相近的" in  trans_data:
+            translated_sublist.append('该多语言文案翻译都内容都相近')
+        else:
+            translated_sublist.append(trans_data)
         translated_list.append(translated_sublist)
     return translated_list
 
 
 def different_key():
+    """
+    :return: 获取差异key 与行数
+    """
     old_file = language2.iloc[:, 0].tolist()
     new_file = language1.iloc[:, 0].tolist()
     diff = DeepDiff(old_file, new_file)
     return diff
 
 
-# 列数相同时，对比所有差异数据
 def different_msg():
+    """
+    :return: 没有新增时，对比所有差异数据
+    """
     diff_msg = []
     diff = []
     old_file = language2.values.tolist()
@@ -176,6 +193,10 @@ def channel_num(channel):
 
 # 既有变化也有修改
 def add_change_diff(language):
+    """
+    :param language: 传入语言列表
+    :return: 返回变化内容与变化
+    """
     diff_msg = []
     diff = []
     diff_num = different_row_number()
@@ -205,6 +226,9 @@ def sort_list(file_list):
 
 # 获取差异行
 def different_row_number():
+    """
+    :return: 返回差异行
+    """
     key_rol = []
     diff = different_key()
     diff_keys = diff.keys()
@@ -219,6 +243,10 @@ def different_row_number():
 
 # 获取每行差异数据
 def different_data(file_name):
+    """
+    :param file_name: 传入文件名
+    :return:  获取每行差异数据
+    """
     data_list = []
     dif_num = different_row_number()
     for data_num in dif_num:
@@ -228,6 +256,15 @@ def different_data(file_name):
 
 # 写入表格文件
 def generate_xlsx(file, file_list, msg, msg2, channel, datas):
+    """
+    :param file:文件名
+    :param file_list:
+    :param msg: 写入新增值
+    :param msg2:写入变换值
+    :param channel:创建文件名的端名
+    :param datas:变化的内容
+    :return: 写入表格文件
+    """
     times = time.strftime('%Y年%m月%d日 %H点-%M分-%S秒', time.localtime(time.time()))
     new_name = f"../result/{times}--{channel}--language_test.xlsx"
     workbook = openpyxl.Workbook()
