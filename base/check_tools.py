@@ -11,6 +11,7 @@ import openpyxl
 from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
 from base.database_tools import execute_sql
+from base.translate import translate_text
 
 
 def start_check(channel):
@@ -74,7 +75,6 @@ def check_tools(channel):
         msg2 = []
         data = ""
         generate_xlsx(file=language2, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
-
     elif max1 > max2:
         # datas_key = different_key()
         rol = different_row_number()
@@ -86,8 +86,9 @@ def check_tools(channel):
             execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
                         modify_quantity=0, quantity=max1)
         else:
+            translate_date = translated_datas(datas1, channel)
             datas2 = add_change_diff(language1)
-            datas = [datas1, datas2[0]]
+            datas = [translate_date, datas2[0]]
             # logger.info(f"第{rol}增加key{datas_key}")
             if len(datas2[0]) > 0:
                 msg2 = [
@@ -96,7 +97,54 @@ def check_tools(channel):
                 msg2 = [f"本次只有新增，没有修改多语言"]
             generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
             execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                        modify_quantity=0, quantity=max1)
+                        modify_quantity=len(datas2[0]), quantity=max1)
+
+
+def translated_datas(original_list, channel):
+    """
+    翻译对应语言
+    """
+    ios_language_list = ['en', 'ar', 'bn', 'bn', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th',
+                         'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
+    android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
+                             'sr', 'th', 'tr', 'tr', 'ur', 'zh-cn', 'auto', 'auto', 'auto']
+    server_language_list = ['en', 'af', 'ar', 'ar', 'bn', 'ez', 'da', 'de', 'en', 'es', 'es', 'fr', 'hi', 'hi', 'in',
+                            'it', 'ja', 'kn', 'ko', 'ml', 'ms', 'my', 'pa', 'pt', 'ru', 'sr', 'sv', 'sw', 'ta', 'te',
+                            'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto']
+    flutter_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'sr',
+                             'th', 'tr', 'ur',
+                             'vi', 'zh-cn', 'auto', 'auto']
+    if channel == 'ios':
+        return translated_datas_start(original_list, ios_language_list)
+    elif channel == 'android':
+        return translated_datas_start(original_list, android_language_list)
+    elif channel == 'server':
+        return translated_datas_start(original_list, server_language_list)
+    else:
+        return translated_datas_start(original_list, flutter_language_list)
+
+
+def translated_datas_start(original_list, language):
+    """
+    开启翻译
+    """
+    translated_list = []
+    for sublist in original_list:
+        translated_sublist = []
+        t = 0
+        translated_sublist.append(sublist[0])
+        sublist.remove(sublist[0])
+        for text in sublist:
+            if text is None or str(text).lower() == 'nan':
+                translated_sublist.append(text)
+                t += 1
+            else:
+                translated_sublist.append(f"“{text}”翻译:{translate_text(text, src=language[t])}")
+                t += 1
+                print(translated_sublist)
+
+        translated_list.append(translated_sublist)
+    return translated_list
 
 
 def channel_num(channel):
@@ -104,7 +152,7 @@ def channel_num(channel):
     :param channel: 端名称
     :return: 返回对应的id
     """
-    channel_dict = {"android": 1, "ios": 2, 'server': 3, 'unity': 4,'flutter':5}
+    channel_dict = {"android": 1, "ios": 2, 'server': 3, 'unity': 4, 'flutter': 5}
     channel_number = channel_dict[channel]
     return channel_number
 
@@ -205,7 +253,6 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     sheet.append(head)
     for file in file_list:
         for i in file:
-            # print(i)
             sheet.append(i)
         if msg2:
             sheet.append(msg2)
@@ -213,7 +260,34 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     insert_edit_cols(sheet)
     if datas != "":
         get_line_value(datas[1], sheet)
+    del_cols(channel, sheet)
     workbook.save(new_name)
+
+
+def del_cols(channel, sheet):
+    """
+    删除列
+    """
+    android_cols_to_delete = [7, 17, 19, 21]
+    ios_cols_to_delete = [6, 20, 24]
+    flutter_cols_to_delete = [7, 18]
+    server_cols_to_delete = [7, 9, 10, 12, 14, 16, 17, 21, 23, 25, 26, 29, 30, 31, 32, 33, 35]
+    if channel == 'android':
+        cols_to_delete = sorted(android_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
+        for col in cols_to_delete:
+            sheet.delete_cols(col)
+    elif channel == 'ios':
+        cols_to_delete = sorted(ios_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
+        for col in cols_to_delete:
+            sheet.delete_cols(col)
+    elif channel == 'flutter':
+        cols_to_delete = sorted(flutter_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
+        for col in cols_to_delete:
+            sheet.delete_cols(col)
+    else:
+        cols_to_delete = sorted(server_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
+        for col in cols_to_delete:
+            sheet.delete_cols(col)
 
 
 def set_column_width(sheet, channel):
@@ -225,11 +299,11 @@ def set_column_width(sheet, channel):
     if channel == 'android':
         for i in range(3, 27):
             column_letter = get_column_letter(i)
-            sheet.column_dimensions[column_letter].width = 20
+            sheet.column_dimensions[column_letter].width = 30
     elif channel == 'ios':
-        for i in range(3, 22):
+        for i in range(3, 24):
             column_letter = get_column_letter(i)
-            sheet.column_dimensions[column_letter].width = 20
+            sheet.column_dimensions[column_letter].width = 30
 
 
 def get_head(file):
@@ -257,7 +331,7 @@ def change_head(file):
 def language_dic():
     lan_dic = {"ar": "ar：阿拉伯语🇸🇦", 'en': "en：英语🇬🇧", 'bn': "bn-IN：孟加拉语-印度🇧🇩",
                'bn-IN': "bn-IN：孟加拉语-印度🇧🇩",
-               'cs': "cs：捷克语🇨🇿", 'de': "de：德语🇩🇪", 'es': "se：西班牙语🇪🇸", 'fr': "fr：法语🇫🇷", 'id': "id：印尼语🇮🇩",
+               'cs': "cs：捷克语🇨🇿", 'de': "de：德语🇩🇪", 'es': "es：西班牙语🇪🇸", 'fr': "fr：法语🇫🇷", 'id': "id：印尼语🇮🇩",
                'in': "in：印尼语🇮🇩", "it": "it：意大利语🇮🇹", 'ja': "ja：日语🇯🇵", 'ko': "ko：韩语🇰🇷", 'ms': "ms：马来语🇲🇾",
                'pt-rBR': "pt-BR：葡萄牙语🇵🇹", 'pt-BR': "pt-BR：葡萄牙语🇵🇹", 'ru': "ru：俄语🇷🇺（老）",
                'ru-rRU': "ru-rRU：俄语🇷🇺", "ru-RU": "ru-rRU：俄语🇷🇺", 'sr': "sr：塞尔维亚语🇷🇸", 'th': "th：泰语🇹🇭",
@@ -282,7 +356,7 @@ def change_filename(channel):
         shutil.move(en_file[0], new_name)
         print(f'{new_name}文件移动成功')
     else:
-        new_name =f"{absolute_path('data')}/{channel}_data/{times}language_{channel}.xlsx"
+        new_name = f"{absolute_path('data')}/{channel}_data/{times}language_{channel}.xlsx"
         en_file = find_file(Dpath, include_str='en', filter_strs=[".~"])
         shutil.move(en_file[0], new_name)
         print(f'{new_name}文件移动成功')
