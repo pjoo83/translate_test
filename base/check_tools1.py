@@ -2,7 +2,6 @@ import time
 import string
 
 from openpyxl.utils import get_column_letter
-
 from read_all_files import find_file
 from trans_reading import read_xlsx_file, rows, read_csv_file
 from deepdiff import DeepDiff
@@ -15,11 +14,13 @@ from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
 from database_tools import execute_sql
 from translate import translate_text
-
+from baidu_ai import main
+import pandas as pd
 
 def start_check(channel):
     global language1, language2
-    files = find_file(f"../data/{channel}_data", include_str="language", filter_strs=["~"])
+    files = find_file(f"/Users/lbj/Desktop/starx/project/translate_test/data/{channel}_data", include_str="language",
+                      filter_strs=["~"])
     # mac排序与win相反
     fil = files[:-3:-1]
     # fil = files
@@ -123,6 +124,7 @@ def translated_datas_start(original_list, language):
 
     for sublist in original_list:
         translated_sublist = []
+        translate = []
         t = 0
         translated_sublist.append(sublist[0])
         sublist.remove(sublist[0])
@@ -131,10 +133,12 @@ def translated_datas_start(original_list, language):
                 translated_sublist.append(text)
                 t += 1
             else:
-                translated_sublist.append(f"“{text}”翻译:{translate_text(text, src=language[t])}")
+                hans = translate_text(text, src=language[t])
+                translated_sublist.append(f"“{text}”翻译:{hans}")
                 t += 1
-                print(translated_sublist)
-
+                # print(translated_sublist)
+                translate.append(hans)
+        translated_sublist.append(main(translate))
         translated_list.append(translated_sublist)
     return translated_list
 
@@ -244,6 +248,7 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
         get_line_value(datas[1], sheet)
     del_cols(channel, sheet)
     workbook.save(new_name)
+    # change_data(new_name)
 
 
 def del_cols(channel, sheet):
@@ -271,6 +276,16 @@ def del_cols(channel, sheet):
         for col in cols_to_delete:
             sheet.delete_cols(col)
 
+
+# def change_data(sheet):
+#     # 跟换列数据
+#     max_column = sheet.max_column
+#     for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=0, max_col=max_column, values_only=False):
+#         # b_value = row[3].value  # B 列的值
+#         last_column_value = row[-1].value
+#         row[2].value = last_column_value
+#         # row[-1].value = b_value  # 将 B 列的值赋给最后一列
+#
 
 def set_column_width(sheet, channel):
     """
@@ -341,8 +356,8 @@ def move_file(client):
 # 插入编辑列
 def insert_edit_cols(sheet):
     sheet.insert_cols(idx=1, amount=2)
-    sheet["A2"] = "完成备注"
-    sheet['B2'] = "编号"
+    sheet["A2"] = "完成签名"
+    sheet['B2'] = "翻译注意点"
 
 
 # 插入变化值
@@ -400,4 +415,13 @@ def del_file():
     print("已成功删除文件夹下的所有文件")
 
 
-start_check('ios')
+def absolute_path(data):
+    """
+    :return: 获取绝对路径
+    """
+    folder_name = f'{data}'
+    folder_path = os.path.abspath(folder_name)
+    return folder_path
+
+
+start_check('flutter')
