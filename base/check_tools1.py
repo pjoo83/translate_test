@@ -55,7 +55,7 @@ def check_tools(channel):
             msg = [f"本次修改了key，{datas_key}"]
             msg2 = []
             data = ""
-            generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
+            generate_xlsx(num=0, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
         else:
             # logger.info("本次内容未新增key,下面进行内容检查")
             dif_msg = different_msg()[0]
@@ -65,7 +65,7 @@ def check_tools(channel):
                 msg2 = []
                 data = ""
                 print(msg)
-                generate_xlsx(file=language1, file_list=dif_msg, msg=msg, channel=channel, msg2=msg2, datas=data)
+                generate_xlsx(num=0, file=language1, file_list=dif_msg, msg=msg, channel=channel, msg2=msg2, datas=data)
             else:
                 # logger.info(f"本次未修改KEY，也未对值进行修改")
                 print(f"本次未修改KEY，也未对值进行修改")
@@ -78,7 +78,7 @@ def check_tools(channel):
         # logger.info(f"第{rol}行减少key有{datas_key}")
         msg2 = []
         data = ""
-        generate_xlsx(file=language2, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
+        generate_xlsx(num=0, file=language2, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
     elif max1 > max2:
         # datas_key = different_key()
         rol = different_row_number()
@@ -87,7 +87,7 @@ def check_tools(channel):
         datas1 = different_data(language1)
         translate_date = translated_datas(datas1, channel)
         if channel == 'server':
-            generate_xlsx(file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
+            generate_xlsx(num=0, file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
             # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
             #             modify_quantity=0, quantity=max1)
         else:
@@ -99,7 +99,8 @@ def check_tools(channel):
                     f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
             else:
                 msg2 = [f"本次只有新增，没有修改多语言"]
-            generate_xlsx(file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=datas2)
+            generate_xlsx(num=max1 - max2, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2,
+                          datas=datas2)
             # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
             #             modify_quantity=len(datas2[0]), quantity=max1)
 
@@ -255,8 +256,9 @@ def different_data(file_name):
 
 
 # 写入表格文件
-def generate_xlsx(file, file_list, msg, msg2, channel, datas):
+def generate_xlsx(num, file, file_list, msg, msg2, channel, datas):
     """
+    :param num: 列数
     :param file:文件名
     :param file_list:
     :param msg: 写入新增值
@@ -284,8 +286,22 @@ def generate_xlsx(file, file_list, msg, msg2, channel, datas):
     if datas != "":
         get_line_value(datas[1], sheet)
     del_cols(channel, sheet)
-    workbook.save(new_name)
+    if num == 0:
+        workbook.save(new_name)
+    else:
+        variable_check(sheet)
+        workbook.save(new_name)
     # change_data(new_name)
+
+
+def variable_check(sheet):
+    for row_num, row in enumerate(sheet.iter_rows(min_col=4, max_col=4, values_only=False), start=1):
+        cell = row[0]
+        if "{" in str(cell.value) or "%" in str(cell.value):
+            print(cell.value)
+            fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
+            c_cell = sheet.cell(row=row_num, column=3)
+            c_cell.fill = fill
 
 
 def del_cols(channel, sheet):
