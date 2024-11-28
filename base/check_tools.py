@@ -110,7 +110,7 @@ def translated_datas(original_list, channel):
     ios_language_list = ['en', 'ar', 'bn', 'bn', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th',
                          'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
     android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
-                             'sr', 'th', 'tr', 'tr', 'ur', 'zh-cn', 'auto', 'auto', 'auto']
+                             'sr', 'th', 'tr', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
     server_language_list = ['en', 'af', 'ar', 'ar', 'bn', 'ez', 'da', 'de', 'en', 'es', 'es', 'fr', 'hi', 'hi', 'in',
                             'it', 'ja', 'kn', 'ko', 'ml', 'ms', 'my', 'pa', 'pt', 'ru', 'sr', 'sv', 'sw', 'ta', 'te',
                             'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto']
