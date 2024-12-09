@@ -1,5 +1,6 @@
 import time
 import string
+from database_tools import execute_sql
 
 from openpyxl.utils import get_column_letter
 from read_all_files import find_file
@@ -101,8 +102,8 @@ def check_tools(channel):
                 msg2 = [f"本次只有新增，没有修改多语言"]
             generate_xlsx(num=max1 - max2, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2,
                           datas=datas2)
-            # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-            #             modify_quantity=len(datas2[0]), quantity=max1)
+            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                        modify_quantity=len(datas2[0]), quantity=max1)
 
         # 获取差异key 与行数
 
@@ -145,14 +146,18 @@ def translated_datas_start(original_list, language):
                 hans = translate_text(text, src=language[t])
                 translated_sublist.append(f"“{text}”翻译:{hans}")
                 t += 1
-                # print(translated_sublist)
+                print(translated_sublist)
                 translate.append(hans)
         trans_data = main(translate)
-        if "不相近" in trans_data:
-            translated_sublist.append(trans_data)
-        else:
-            translated_sublist.append('该多语言文案翻译的意思相近')
-        translated_list.append(translated_sublist)
+        print(trans_data)
+        try:
+            if "不相近" in trans_data or '不' in trans_data:
+                translated_sublist.append(trans_data)
+            else:
+                translated_sublist.append('该多语言文案翻译的意思相近')
+            translated_list.append(translated_sublist)
+        except KeyError:
+            translated_sublist.append('翻译失败')
     return translated_list
 
 
@@ -477,4 +482,4 @@ def absolute_path(data):
     return folder_path
 
 
-start_check('flutter')
+start_check('ios')

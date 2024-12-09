@@ -19,11 +19,13 @@ def main(test):
     headers = {
         'Content-Type': 'application/json'
     }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
+    try:
+        response = requests.request("POST", url, headers=headers, data=payload)
+        return response.json()['result']
+    except Exception as e:
+        return e
     # print(response.json()['result'])
-    return response.json()['result']
+
 
 
 def get_access_token():
