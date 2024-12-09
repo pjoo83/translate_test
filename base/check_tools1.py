@@ -27,8 +27,8 @@ def start_check(channel):
     files = find_file(f"../data/{channel}_data", include_str="language",
                       filter_strs=["~"])
     # mac排序与win相反
-    fil = files[:-3:-1]
-    # fil = files
+    # fil = files[:-3:-1]
+    fil = files
     if channel == 'server':
         language1 = read_csv_file(fil[0])
         language2 = read_csv_file(fil[1])
@@ -102,8 +102,8 @@ def check_tools(channel):
                 msg2 = [f"本次只有新增，没有修改多语言"]
             generate_xlsx(num=max1 - max2, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2,
                           datas=datas2)
-            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                        modify_quantity=len(datas2[0]), quantity=max1)
+            # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+            #             modify_quantity=len(datas2[0]), quantity=max1)
 
         # 获取差异key 与行数
 
@@ -119,12 +119,15 @@ def translated_datas(original_list, channel):
     flutter_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'se', 'fr', 'in', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'sr',
                              'th', 'tr', 'ur',
                              'vi', 'zh-cn', 'auto', 'auto']
+    short_play_list = ['en', 'de', 'es', 'fr', 'in', 'it', 'ja', 'ko', 'pt', 'ru', 'th', 'tl', 'tr', 'vi', 'auto']
     if channel == 'ios':
         return translated_datas_start(original_list, ios_language_list)
     elif channel == 'android':
         return translated_datas_start(original_list, android_language_list)
     elif channel == 'server':
         return translated_datas_start(original_list, server_language_list)
+    elif channel =='play_android' or channel =='play_ios':
+        return translated_datas_start(original_list,short_play_list)
     else:
         return translated_datas_start(original_list, flutter_language_list)
 
@@ -290,7 +293,7 @@ def generate_xlsx(num, file, file_list, msg, msg2, channel, datas):
     insert_edit_cols(sheet)
     if datas != "":
         get_line_value(datas[1], sheet)
-    del_cols(channel, sheet)
+    # del_cols(channel, sheet)
     if num == 0:
         workbook.save(new_name)
     else:
@@ -482,4 +485,4 @@ def absolute_path(data):
     return folder_path
 
 
-start_check('ios')
+start_check('play_android')
