@@ -1,0 +1,24 @@
+phrase:
+  access_token: ${ACCESS_TOKEN}
+  project_id: ${PROJECT_ID}
+  pull:
+    targets:
+      - file: ./language/<locale_name>.xlsx
+        params:
+          file_format: xlsx
+          tags: common
+
+
+
+# ccocose
+#  access_token: 60de135389b35128b4d172c1143c66a206b20b626b06e96793454ae30d10aedc
+#   project_id: c988bd901906b54229aab53f016d6b76
+
+
+#android 
+  # access_token: 07be57ad97bc0a5c6972672d0347b8206ae7802b4f7b2e15ccf3bbd270ef86c8
+  # project_id: b568a11c6a1cd2b9a358645f139caa81
+
+# ios
+  # access_token: 403f7b41bbe055f7f19ed7e58f93f8f04a22d271066b5a7abf283f7690343f5a
+  # project_id: 1a374225727009b986e6362f02b8cd4f
