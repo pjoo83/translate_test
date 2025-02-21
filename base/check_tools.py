@@ -107,8 +107,8 @@ def translated_datas(original_list, channel):
     """
     翻译对应语言
     """
-    ios_language_list = ['en', 'ar', 'bn', 'bn', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th',
-                         'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
+    ios_language_list = ['en', 'ar', 'bn', 'bn', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru', 'th',
+                         'tr', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto', 'auto']
     android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
                              'sr', 'th', 'tr', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
     server_language_list = ['en', 'af', 'ar', 'ar', 'bn', 'ez', 'da', 'de', 'en', 'es', 'es', 'fr', 'hi', 'hi', 'in',
@@ -150,7 +150,7 @@ def translated_datas_start(original_list, language):
                 translate.append(hans)
                 translate.append(hans)
         trans_data = main(translate)
-        if "不相近" in trans_data:
+        if "不相近" in trans_data or "不" in trans_data:
             translated_sublist.append(trans_data)
         else:
             translated_sublist.append('该多语言文案翻译的意思相近')
@@ -163,7 +163,7 @@ def channel_num(channel):
     :param channel: 端名称
     :return: 返回对应的id
     """
-    channel_dict = {"android": 1, "ios": 2, 'server': 3, 'unity': 4, 'flutter': 5}
+    channel_dict = {"android": 1, "ios": 2, 'server': 3, 'unity': 4, 'flutter': 5, 'cocos': 6}
     channel_number = channel_dict[channel]
     return channel_number
 
@@ -298,8 +298,8 @@ def del_cols(channel, sheet):
     """
     删除列
     """
-    android_cols_to_delete = [7, 17, 19, 21]
-    ios_cols_to_delete = [6, 20, 24]
+    android_cols_to_delete = [7, 18, 19, 22]
+    ios_cols_to_delete = [7, 18, 20, 23, 24, 28]
     flutter_cols_to_delete = [7, 18]
     server_cols_to_delete = [7, 9, 10, 12, 14, 16, 17, 21, 23, 25, 26, 29, 30, 31, 32, 33, 35]
     if channel == 'android':
