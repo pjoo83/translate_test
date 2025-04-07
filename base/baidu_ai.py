@@ -6,26 +6,28 @@ SECRET_KEY = "FQ1hV8v3gs7znZGPdiVv3PA7sHLKbCyH"
 
 
 def main(test):
-    url = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/yi_34b_chat?access_token=" + get_access_token()
+    # url = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/yi_34b_chat?access_token=" + get_access_token()
+    # payload = json.dumps({
+    #     "model": "deepseek-r1:1.5b",
+    #     "prompt": f"{test}每句中“翻译：”后面的语句的意思相近吗，只用告诉我是不是相近，如果不相近的话，第几个不相近",
+    #     "stream": False
+    # })
+    url = "http://10.41.1.89:11434/api/generate"
 
     payload = json.dumps({
-        "messages": [
-            {
-                "role": "user",
-                "content": f"{test}每句中“翻译：”后面的语句的意思相近吗，只用告诉我是不是相近，如果不相近的话，第几个不相近"
-            },
-        ]
+        "model": "deepseek-r1:1.5b",
+        "prompt":  f"{test}每句中“翻译：”后面的语句的意思相近吗，只用告诉我是不是相近，如果不相近的话，第几个不相近",
+        "stream": False
     })
     headers = {
         'Content-Type': 'application/json'
     }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print(response.json()['response'])
     try:
-        response = requests.request("POST", url, headers=headers, data=payload)
-        return response.json()['result']
-    except Exception as e:
-        return e
-    # print(response.json()['result'])
-
+        return response.json()['response']
+    except KeyError:
+        return '翻译错误'
 
 
 def get_access_token():
