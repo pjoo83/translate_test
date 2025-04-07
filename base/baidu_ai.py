@@ -23,9 +23,9 @@ def main(test):
         'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    print(response.json()['response'])
+    print(response.json()['response'].split('</think>')[1])
     try:
-        return response.json()['response']
+        return response.json()['response'].split('</think>')[1]
     except KeyError:
         return '翻译错误'
 
