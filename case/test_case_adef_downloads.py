@@ -24,7 +24,7 @@ def test_download_ios():
     :return: ios文件下载
     """
     if ef_download('ios', 2):
-        print("android文件已完成下载")
+        print("ios文件已完成下载")
 
 
 def test_download_server():
