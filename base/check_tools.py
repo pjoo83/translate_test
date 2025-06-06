@@ -13,6 +13,7 @@ from openpyxl.comments import Comment
 from base.database_tools import execute_sql
 from base.translate import translate_text
 from base.baidu_ai import main
+import pandas as pd
 
 
 def start_check(channel):
@@ -25,14 +26,17 @@ def start_check(channel):
                       filter_strs=["~"])
     fil = files[:-3:-1]
     if channel == 'server':
-        language1 = read_csv_file(fil[0])
-        language2 = read_csv_file(fil[1])
+        sort_excel_by_first_column_desc(fil[0])
+        language1 = read_xlsx_file(fil[0])
+        language2 = read_xlsx_file(r"D:\project\starx_project\translate\data\server_data\2025年04月07日 "
+                                   r"14点-20分language_server.xlsx")
         check_tools(channel)
     else:
+        sort_excel_by_first_column_desc(fil[0])
+        sort_excel_by_first_column_desc(fil[1])
         language1 = read_xlsx_file(fil[0])
         language2 = read_xlsx_file(fil[1])
         check_tools(channel)
-
 
 # 检测
 def check_tools(channel):
@@ -100,20 +104,20 @@ def check_tools(channel):
             generate_xlsx(num=max1 - max2, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2,
                           datas=datas2)
             execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                        modify_quantity=len(datas2[0]), quantity=max1)
+                        modify_quantity=len(datas2[0]), quantity=max1, method="insert")
 
 
 def translated_datas(original_list, channel):
     """
     翻译对应语言
     """
-    ios_language_list = ['en', 'ar', 'bn', 'bn', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru', 'th',
-                         'tr', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto', 'auto']
-    android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
-                             'sr', 'th', 'tr', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
-    server_language_list = ['en', 'af', 'ar', 'ar', 'bn', 'ez', 'da', 'de', 'en', 'es', 'es', 'fr', 'hi', 'hi', 'in',
-                            'it', 'ja', 'kn', 'ko', 'ml', 'ms', 'my', 'pa', 'pt', 'ru', 'sr', 'sv', 'sw', 'ta', 'te',
-                            'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto']
+    ios_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru',
+                         'th', 'tr', 'vi']
+    android_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'id', 'it', 'ja', 'ko', 'ms', 'pt',
+                             'ru', 'th', 'tr', 'ur', 'vi']
+    server_language_list = ['en', 'ar',  'bn', 'de',  'es', 'fr',  'id',
+                            'it', 'ja',  'ko',  'ms', 'pt', 'ru',
+                            'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto']
     flutter_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'sr',
                              'th', 'tr', 'ur',
                              'vi', 'zh-cn', 'auto', 'auto']
@@ -272,7 +276,7 @@ def generate_xlsx(num, file, file_list, msg, msg2, channel, datas):
     insert_edit_cols(sheet)
     if datas != "":
         get_line_value(datas[1], sheet)
-    del_cols(channel, sheet)
+    # del_cols(channel, sheet)
     if num == 0:
         workbook.save(new_name)
     else:
@@ -491,3 +495,24 @@ def absolute_path(data):
     folder_name = f'{data}'
     folder_path = os.path.abspath(folder_name)
     return folder_path
+
+
+def sort_excel_by_first_column_desc(file_path):
+    """
+    :param file_path:
+    :return: 返回新的排序
+    """
+    # 读取 Excel 文件
+    df = pd.read_excel(file_path)
+
+    # 获取第一列列名
+    first_col = df.columns[0]
+
+    # 根据第一列倒序排序
+    df_sorted = df.sort_values(by=first_col, ascending=False)
+
+    # 保存回文件（可修改为另存为）
+    df_sorted.to_excel(file_path, index=False)
+    time.sleep(2)
+    print(f"{file_path} 排序完成。")
+
