@@ -27,13 +27,19 @@ def start_check(channel):
     files = find_file(f"../data/{channel}_data", include_str="language",
                       filter_strs=["~"])
     # mac排序与win相反
-    # fil = files[:-3:-1]
-    fil = files
+    fil = files[:-3:-1]
+
+    # fil = files
     if channel == 'server':
-        language1 = read_csv_file(fil[0])
-        language2 = read_csv_file(fil[1])
+        sort_excel_by_first_column_desc(fil[0])
+        language1 = read_xlsx_file(fil[0])
+        # language2 = read_xlsx_file(r"D:\project\starx_project\translate\data\server_data\2025年04月07日 "
+        #                            r"14点-20分language_server.xlsx")
+        language2 = read_xlsx_file(fil[1])
         check_tools(channel)
     else:
+        sort_excel_by_first_column_desc(fil[0])
+        sort_excel_by_first_column_desc(fil[1])
         language1 = read_xlsx_file(fil[0])
         language2 = read_xlsx_file(fil[1])
         check_tools(channel)
@@ -86,12 +92,14 @@ def check_tools(channel):
         rol = [i + 2 for i in rol]
         msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
         datas1 = different_data(language1)
-        translate_date = translated_datas(datas1, channel)
         if channel == 'server':
-            generate_xlsx(num=0, file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
-            # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-            #             modify_quantity=0, quantity=max1)
+            translate_date = translated_datas(datas1, channel)
+            generate_xlsx(num=0, file=language1, file_list=[translate_date, ""], msg=msg, channel=channel, msg2=[''],
+                          datas="")
+            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                        modify_quantity=0, quantity=max1)
         else:
+            translate_date = translated_datas(datas1, channel)
             datas2 = add_change_diff(language1)
             datas = [translate_date, datas2[0]]
             # logger.info(f"第{rol}增加key{datas_key}")
@@ -102,32 +110,35 @@ def check_tools(channel):
                 msg2 = [f"本次只有新增，没有修改多语言"]
             generate_xlsx(num=max1 - max2, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2,
                           datas=datas2)
-            # execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-            #             modify_quantity=len(datas2[0]), quantity=max1)
+            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                        modify_quantity=len(datas2[0]), quantity=max1, method="insert")
 
         # 获取差异key 与行数
 
 
 def translated_datas(original_list, channel):
-    ios_language_list = ['en', 'ar', 'bn', 'bn', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th',
-                         'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto', 'auto']
-    android_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ru',
-                             'sr', 'th', 'tr', 'tr', 'ur', 'zh-cn', 'auto', 'auto', 'auto']
-    server_language_list = ['en', 'af', 'ar', 'ar', 'bn', 'ez', 'da', 'de', 'en', 'es', 'es', 'fr', 'hi', 'hi', 'in',
-                            'it', 'ja', 'kn', 'ko', 'ml', 'ms', 'my', 'pa', 'pt', 'ru', 'sr', 'sv', 'sw', 'ta', 'te',
-                            'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto']
+    ios_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru',
+                         'th', 'tr', 'vi']
+    android_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'id', 'it', 'ja', 'ko', 'ms', 'pt',
+                             'ru', 'th', 'tr', 'ur', 'vi']
+    server_language_list = ['en', 'ar', 'bn', 'de', 'es', 'es', 'fr', 'in',
+                            'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto']
     flutter_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'se', 'fr', 'in', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'sr',
                              'th', 'tr', 'ur',
                              'vi', 'zh-cn', 'auto', 'auto']
-    short_play_list = ['en', 'de', 'es', 'fr', 'in', 'it', 'ja', 'ko', 'pt', 'ru', 'th', 'tl', 'tr', 'vi', 'auto']
+    short_play_android_list = ['en', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'auto', 'ru', 'th', 'tl', 'tr', 'vi',
+                               'auto']
+    short_play_ios_list = ['en', 'de', 'es', 'tl', 'fr', 'id', 'it', 'ja', 'ko', 'auto', 'ru', 'th', 'tr', 'vi', 'auto']
     if channel == 'ios':
         return translated_datas_start(original_list, ios_language_list)
     elif channel == 'android':
         return translated_datas_start(original_list, android_language_list)
     elif channel == 'server':
         return translated_datas_start(original_list, server_language_list)
-    elif channel =='play_android' or channel =='play_ios':
-        return translated_datas_start(original_list,short_play_list)
+    elif channel == 'play_android':
+        return translated_datas_start(original_list, short_play_android_list)
+    elif channel == 'play_ios':
+        return translated_datas_start(original_list, short_play_ios_list)
     else:
         return translated_datas_start(original_list, flutter_language_list)
 
@@ -293,7 +304,7 @@ def generate_xlsx(num, file, file_list, msg, msg2, channel, datas):
     insert_edit_cols(sheet)
     if datas != "":
         get_line_value(datas[1], sheet)
-    # del_cols(channel, sheet)
+    del_cols(channel, sheet)
     if num == 0:
         workbook.save(new_name)
     else:
@@ -316,10 +327,10 @@ def del_cols(channel, sheet):
     """
     删除列
     """
-    android_cols_to_delete = [7, 17, 19, 21]
-    ios_cols_to_delete = [6, 20, 24]
+    android_cols_to_delete = [7, 18, 19, 22]
+    ios_cols_to_delete = [7, 18, 20, 23, 24, 28]
     flutter_cols_to_delete = [7, 18]
-    server_cols_to_delete = [7, 9, 10, 12, 14, 16, 17, 21, 23, 25, 26, 29, 30, 31, 32, 33, 35]
+    server_cols_to_delete = []
     if channel == 'android':
         cols_to_delete = sorted(android_cols_to_delete, reverse=True)  # 确保从最大的列开始删除
         for col in cols_to_delete:
@@ -485,4 +496,24 @@ def absolute_path(data):
     return folder_path
 
 
-start_check('play_android')
+def sort_excel_by_first_column_desc(file_path):
+    """
+    :param file_path:
+    :return: 返回新的排序
+    """
+    # 读取 Excel 文件
+    df = pd.read_excel(file_path)
+
+    # 获取第一列列名
+    first_col = df.columns[0]
+
+    # 根据第一列倒序排序
+    df_sorted = df.sort_values(by=first_col, ascending=False)
+
+    # 保存回文件（可修改为另存为）
+    df_sorted.to_excel(file_path, index=False)
+    time.sleep(2)
+    print(f"{file_path} 排序完成。")
+
+
+start_check('android')
