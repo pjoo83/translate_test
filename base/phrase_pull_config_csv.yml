@@ -3,7 +3,7 @@ phrase:
   project_id: ${PROJECT_ID}
   pull:
     targets:
-      - file: ./language/<locale_name>.xlsx
+      - file: D:\project\starx_project\translate\base\language\<locale_name>.xlsx
         params:
           file_format: xlsx
           tags: common

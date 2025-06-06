@@ -7,7 +7,7 @@ import shutil
 
 def merge_files(channel):
     # 语言文件所在的目录
-    language_folder = "base/language/"
+    language_folder = r"D:\project\starx_project\translate\base\language"
     # 目标合并文件
     output_file = file_name(channel)
 
@@ -82,7 +82,7 @@ def file_name(channel):
     #     new_name = fr"{absolute_path('data')}/{channel}_data/{times}language_{channel}.csv"
     #     return new_name
     # else:
-    new_name = fr"{absolute_path('data')}/{channel}_data/{times}language_{channel}.xlsx"
+    new_name = fr"D:\project\starx_project\translate\data\{channel}_data\{times}language_{channel}.xlsx"
     return new_name
 
 
