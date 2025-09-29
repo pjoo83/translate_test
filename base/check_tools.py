@@ -38,6 +38,7 @@ def start_check(channel):
         language2 = read_xlsx_file(fil[1])
         check_tools(channel)
 
+
 # 检测
 def check_tools(channel):
     """
@@ -112,11 +113,11 @@ def translated_datas(original_list, channel):
     翻译对应语言
     """
     ios_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru',
-                         'th', 'tr', 'vi']
+                         'th', 'tr', 'vi', 'uk']
     android_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'id', 'it', 'ja', 'ko', 'ms', 'pt',
-                             'ru', 'th', 'tr', 'ur', 'vi']
-    server_language_list = ['en', 'ar',  'bn', 'de',  'es', 'fr',  'id',
-                            'it', 'ja',  'ko',  'ms', 'pt', 'ru',
+                             'ru', 'th', 'tr', 'ur', 'vi', 'uk']
+    server_language_list = ['en', 'ar', 'bn', 'de', 'es', 'fr', 'id',
+                            'it', 'ja', 'ko', 'ms', 'pt', 'ru',
                             'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto']
     flutter_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'sr',
                              'th', 'tr', 'ur',
@@ -515,4 +516,3 @@ def sort_excel_by_first_column_desc(file_path):
     df_sorted.to_excel(file_path, index=False)
     time.sleep(2)
     print(f"{file_path} 排序完成。")
-
