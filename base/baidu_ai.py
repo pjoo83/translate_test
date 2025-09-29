@@ -12,7 +12,7 @@ def main(test):
     #     "prompt": f"{test}每句中“翻译：”后面的语句的意思相近吗，只用告诉我是不是相近，如果不相近的话，第几个不相近",
     #     "stream": False
     # })
-    url = "http://10.41.1.89:11434/api/generate"
+    url = "http://10.41.1.89:11435/api/generate"
 
     payload = json.dumps({
         "model": "deepseek-r1:1.5b",
