@@ -26,10 +26,7 @@ def start_check(channel):
                       filter_strs=["~"])
     fil = files[:-3:-1]
     if channel == 'server':
-        sort_excel_by_first_column_desc(fil[0])
         language1 = read_xlsx_file(fil[0])
-        language2 = read_xlsx_file(r"D:\project\starx_project\translate\data\server_data\2025年04月07日 "
-                                   r"14点-20分language_server.xlsx")
         check_tools(channel)
     else:
         sort_excel_by_first_column_desc(fil[0])
@@ -45,67 +42,77 @@ def check_tools(channel):
     :param channel: 选择对应端
     :return: 返回差异内容
     """
-    max1 = rows(language1)
-    max2 = rows(language2)
-    if max1 == max2:
-        # logger.info(F"本次行数相同,共计key{max1 - 1}条")
-        datas_key = different_key()
-        if len(datas_key) > 0:
-            # logger.info(f"本次修改了key，{datas_key}")
-            datas = different_data(language1)
-            msg = [f"本次修改了key，{datas_key}"]
-            msg2 = []
-            data = ""
-            generate_xlsx(num=0, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
-        else:
-            # logger.info("本次内容未新增key,下面进行内容检查")
-            dif_msg = different_msg()
-            if len(dif_msg[0]) > 0:
-                msg = [
-                    f"本次检测共有{len(dif_msg[0])}条的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+    if channel == 'server':
+        date = language1.values.tolist()
+        msg = [f"本次多语言,共新增{len(date)}条"]
+        dates = translated_datas(date, channel)
+        generate_xlsx(num=0, file=language1, file_list=[dates, ""], msg=msg, channel=channel, msg2=[''],
+                      datas="")
+        execute_sql(channel_id=channel_num(channel), newly_quantity=len(date),
+                    modify_quantity=0, quantity=len(date), method="insert")
+    else:
+        max1 = rows(language1)
+        max2 = rows(language2)
+        if max1 == max2:
+            # logger.info(F"本次行数相同,共计key{max1 - 1}条")
+            datas_key = different_key()
+            if len(datas_key) > 0:
+                # logger.info(f"本次修改了key，{datas_key}")
+                datas = different_data(language1)
+                msg = [f"本次修改了key，{datas_key}"]
                 msg2 = []
                 data = ""
-                generate_xlsx(num=0, file=language1, file_list=dif_msg[0], msg=msg, channel=channel, msg2=msg2,
-                              datas=data)
+                generate_xlsx(num=0, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
+            else:
+                # logger.info("本次内容未新增key,下面进行内容检查")
+                dif_msg = different_msg()
+                if len(dif_msg[0]) > 0:
+                    msg = [
+                        f"本次检测共有{len(dif_msg[0])}条的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+                    msg2 = []
+                    data = ""
+                    generate_xlsx(num=0, file=language1, file_list=dif_msg[0], msg=msg, channel=channel, msg2=msg2,
+                                  datas=data)
+                    execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                                modify_quantity=len(dif_msg[0]), quantity=max1)
+                else:
+                    # logger.info(f"本次未修改KEY，也未对值进行修改")
+                    print(f"本次未修改KEY，也未对值进行修改")
+        elif max1 < max2:
+            rol = different_row_number()
+            rol = [i + 2 for i in rol]
+            msg = [f"本次多语言在{rol}行减少,共减少{max2 - max1}条"]
+            # datas_key = different_key()
+            datas = different_data(language2)
+            # logger.info(f"第{rol}行减少key有{datas_key}")
+            msg2 = []
+            data = ""
+            generate_xlsx(num=0, file=language2, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
+        elif max1 > max2:
+            # datas_key = different_key()
+            rol = different_row_number()
+            rol = [i + 2 for i in rol]
+            msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
+            datas1 = different_data(language1)
+            if channel == 'server':
+                generate_xlsx(num=0, file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''],
+                              datas="")
                 execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                            modify_quantity=len(dif_msg[0]), quantity=max1)
+                            modify_quantity=0, quantity=max1)
             else:
-                # logger.info(f"本次未修改KEY，也未对值进行修改")
-                print(f"本次未修改KEY，也未对值进行修改")
-    elif max1 < max2:
-        rol = different_row_number()
-        rol = [i + 2 for i in rol]
-        msg = [f"本次多语言在{rol}行减少,共减少{max2 - max1}条"]
-        # datas_key = different_key()
-        datas = different_data(language2)
-        # logger.info(f"第{rol}行减少key有{datas_key}")
-        msg2 = []
-        data = ""
-        generate_xlsx(num=0, file=language2, file_list=datas, msg=msg, channel=channel, msg2=msg2, datas=data)
-    elif max1 > max2:
-        # datas_key = different_key()
-        rol = different_row_number()
-        rol = [i + 2 for i in rol]
-        msg = [f"本次多语言在{rol}行新增,共新增{max1 - max2}条"]
-        datas1 = different_data(language1)
-        if channel == 'server':
-            generate_xlsx(num=0, file=language1, file_list=[datas1, ""], msg=msg, channel=channel, msg2=[''], datas="")
-            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                        modify_quantity=0, quantity=max1)
-        else:
-            translate_date = translated_datas(datas1, channel)
-            datas2 = add_change_diff(language1)
-            datas = [translate_date, datas2[0]]
-            # logger.info(f"第{rol}增加key{datas_key}")
-            if len(datas2[0]) > 0:
-                msg2 = [
-                    f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
-            else:
-                msg2 = [f"本次只有新增，没有修改多语言"]
-            generate_xlsx(num=max1 - max2, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2,
-                          datas=datas2)
-            execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
-                        modify_quantity=len(datas2[0]), quantity=max1, method="insert")
+                translate_date = translated_datas(datas1, channel)
+                datas2 = add_change_diff(language1)
+                datas = [translate_date, datas2[0]]
+                # logger.info(f"第{rol}增加key{datas_key}")
+                if len(datas2[0]) > 0:
+                    msg2 = [
+                        f"本次检测共有{len(datas2[0])}条多语言的值出现变化,修改后的详情见下方！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！"]
+                else:
+                    msg2 = [f"本次只有新增，没有修改多语言"]
+                generate_xlsx(num=max1 - max2, file=language1, file_list=datas, msg=msg, channel=channel, msg2=msg2,
+                              datas=datas2)
+                execute_sql(channel_id=channel_num(channel), newly_quantity=max1 - max2,
+                            modify_quantity=len(datas2[0]), quantity=max1, method="insert")
 
 
 def translated_datas(original_list, channel):
@@ -116,9 +123,8 @@ def translated_datas(original_list, channel):
                          'th', 'tr', 'vi', 'uk']
     android_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'id', 'it', 'ja', 'ko', 'ms', 'pt',
                              'ru', 'th', 'tr', 'ur', 'vi', 'uk']
-    server_language_list = ['en', 'ar', 'bn', 'de', 'es', 'fr', 'id',
-                            'it', 'ja', 'ko', 'ms', 'pt', 'ru',
-                            'th', 'tr', 'ur', 'vi', 'zh-cn', 'auto', 'auto']
+    server_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'en', 'id', 'ja', 'ko', 'ms', 'pt',
+                            'ru', 'th', 'tr', 'ur', 'vi', 'uk']
     flutter_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'sr',
                              'th', 'tr', 'ur',
                              'vi', 'zh-cn', 'auto', 'auto']
@@ -339,6 +345,10 @@ def set_column_width(sheet, channel):
         for i in range(3, 24):
             column_letter = get_column_letter(i)
             sheet.column_dimensions[column_letter].width = 30
+    elif channel == 'server':
+        for i in range(3, 27):
+            column_letter = get_column_letter(i)
+            sheet.column_dimensions[column_letter].width = 30
 
 
 def get_head(file):
@@ -373,7 +383,7 @@ def language_dic():
                "tr": "tr：土耳其语🇹🇷（老）", 'tr-rTR': "tr-rTR：土耳其语🇹🇷（新）", 'tr-TR': "tr-TR：土耳其语🇹🇷",
                'ur-PK': "ur-rPK：ur-PK：乌尔都语🇵🇰", "ur-rPK": "ur-rPK：乌尔都语🇵🇰", 'vi': 'vi：越南语🇻🇳',
                'zh-rCN': "zh-rCN：中文🇨🇳", "zh-CN": "zh-CN：中文🇨🇳", 'zh-rTW': "zh-rTW：繁体中文🇨🇳",
-               "zh-Hant": "zh-Hant:繁体中文🇨🇳"}
+               "zh-Hant": "zh-Hant:繁体中文🇨🇳", "uk": ':乌克兰🇺🇦'}
     return lan_dic
 
 
