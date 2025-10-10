@@ -25,6 +25,7 @@ def start_check(channel):
     files = find_file(fr"{absolute_path('data')}/{channel}_data", include_str="language",
                       filter_strs=["~"])
     fil = files[:-3:-1]
+    # fil = files
     if channel == 'server':
         language1 = read_xlsx_file(fil[0])
         check_tools(channel)
@@ -46,10 +47,11 @@ def check_tools(channel):
         date = language1.values.tolist()
         msg = [f"本次多语言,共新增{len(date)}条"]
         dates = translated_datas(date, channel)
+        print(dates)
         generate_xlsx(num=0, file=language1, file_list=[dates, ""], msg=msg, channel=channel, msg2=[''],
                       datas="")
-        execute_sql(channel_id=channel_num(channel), newly_quantity=len(date),
-                    modify_quantity=0, quantity=len(date), method="insert")
+        # execute_sql(channel_id=channel_num(channel), newly_quantity=len(date),
+        #             modify_quantity=0, quantity=len(date), method="insert")
     else:
         max1 = rows(language1)
         max2 = rows(language2)
@@ -123,8 +125,8 @@ def translated_datas(original_list, channel):
                          'th', 'tr', 'vi', 'uk']
     android_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'id', 'it', 'ja', 'ko', 'ms', 'pt',
                              'ru', 'th', 'tr', 'ur', 'vi', 'uk']
-    server_language_list = ['en', 'zh-cn', 'de', 'es', 'fr', 'auto', 'ar', 'bn', 'en', 'id', 'ja', 'ko', 'ms', 'pt',
-                            'ru', 'th', 'tr', 'ur', 'vi', 'uk']
+    server_language_list = ['ar', 'bn', 'de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'th',
+                            'tr', 'ur', 'vi','zh-cn', 'auto', 'uk']
     flutter_language_list = ['en', 'ar', 'bn', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'sr',
                              'th', 'tr', 'ur',
                              'vi', 'zh-cn', 'auto', 'auto']
